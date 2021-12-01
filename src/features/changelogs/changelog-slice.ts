@@ -1,33 +1,48 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import ChangelogDataService from '../../services/changelog.service';
 
-interface Catalog {
+export interface CatalogEntry {
+  version: string,
+  file_name: string
+}
+
+export interface Catalog {
     date_modified: string,
-    changelogs: string[]
+    changelogs: CatalogEntry[]
+}
+
+interface ChangelogNode {
+  name: string,
+  children?: ChangelogNode[],
+  entries?: string[]
+}
+
+interface ChangelogRoot {
+  version: string,
+  url: string,
+  categories: ChangelogNode[]
 }
 
 interface ChangelogState {
+  catalog?: Catalog,
   changelogs:any[],
   status:string,
   error:any
 }
 
 const initialState: ChangelogState = {
+  catalog: undefined,
   changelogs: [],
   status: 'idle',
   error: null
 };
 
-
 const changelogsTransformation = async (catalog: Catalog) => {
   let url = '/'
   const genreRequestArray:any[] = []
-  catalog.changelogs.forEach(changelog_url => {
-      let newUrlParser = url += changelog_url;
-      genreRequestArray.push(ChangelogDataService.get(changelog_url).then(response => (response.data)))
-      /*newUrlParser += genre.id.toString()
-      genreRequestArray.push(axios.get(newUrlParser).then(response =>
-          ({ title: genre.name, videos: response.data.results })))*/
+  catalog.changelogs.forEach(changelog_entry => {
+      const changelogId = changelog_entry.file_name;
+      genreRequestArray.push(ChangelogDataService.get(changelogId).then(response => (response.data as ChangelogRoot)))
   })
 
   try {
@@ -46,16 +61,30 @@ async function getCatalog(): Promise<Catalog> {
   }
 }
 
+/* fetchChangelogs */ 
 export const fetchChangelogs = createAsyncThunk('changelogs/fetchChangelogs',
-    async (_, { rejectWithValue }) => {
+    async (catalog:Catalog, { rejectWithValue }) => {
         try {
-            const catalog = await getCatalog();
             return await changelogsTransformation(catalog)
         } catch (error) {
             if (!error.response) {
                 throw error
             }
 
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
+/* fetchCatalog */ 
+export const fetchCatalog = createAsyncThunk<Catalog>('changelogs/fetchCatalog',
+    async (_, { rejectWithValue }) => {
+        try {
+            return await getCatalog();
+        } catch (error) {
+            if (!error.response) {
+                throw error
+            }
             return rejectWithValue(error.response.data)
         }
     }
@@ -68,16 +97,32 @@ const changelogSlice = createSlice({
         // fill in primary logic here
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchChangelogs.pending, (state, action) => {
-          state.status = 'loading'
+      /* fetchCatalog */ 
+      builder.addCase(fetchCatalog.pending, (state, action) => {
+        state.status = 'loading'
+      }),
+      builder.addCase(fetchCatalog.fulfilled, (state, action) => {
+        state.catalog = action.payload
+        state.status = 'success'
+      }),
+      builder.addCase(fetchCatalog.rejected, (state, action) => {
+        state.status = 'error'
+        if (action.payload) {
+            state.error = action.payload.status_message
+        } else {
+            state.error = action.error
+        }
+      }),
 
+      /* fetchChangelogs */ 
+      builder.addCase(fetchChangelogs.pending, (state, action) => {
+          state.status = 'loading'
         }),
         builder.addCase(fetchChangelogs.fulfilled, (state, action) => {
           action.payload.forEach(changelog => {
             state.changelogs.push({ ...changelog })
-        })
-
-        state.status = 'success'
+          })
+          state.status = 'success'
         }),
         builder.addCase(fetchChangelogs.rejected, (state, action) => {
           state.status = 'error'
@@ -96,5 +141,5 @@ const { reducer } = changelogSlice;
 export default reducer;
 */
 //export const { getCatalog } = changelogSlice.caseReducers;
-export const selectTvByGenre = state => state.changelog
+export const changelogSelector = state => state.changelog
 export default changelogSlice.reducer;

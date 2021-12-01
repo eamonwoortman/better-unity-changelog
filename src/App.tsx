@@ -1,25 +1,46 @@
 import React, { useEffect } from 'react';
+import { unwrapResult } from '@reduxjs/toolkit'
 import './App.css';
 import { useAppDispatch, useAppSelector } from './app/hooks';
-import { fetchChangelogs, selectTvByGenre } from './features/changelogs/changelog-slice';
+import { fetchChangelogs, fetchCatalog, changelogSelector, CatalogEntry } from './features/changelogs/changelog-slice';
 import { amountAdded } from './features/counter/counter-slice';
 import logo from './logo.svg';
 
 function App() {
   const count = useAppSelector((state)=>state.counter.value);
   const dispatch = useAppDispatch();
-  const {changelogs, status, error} = useAppSelector(selectTvByGenre)
+  const {catalog, changelogs, status, error} = useAppSelector(changelogSelector)
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchChangelogs());
+      let result = dispatch(fetchCatalog()).then(unwrapResult).then(catalog => dispatch(fetchChangelogs(catalog)))
+      console.log('result:', result);
+      //dispatch(fetchChangelogs());
     }
-    console.log(status);
-    console.log(changelogs);
+    console.log('status:', status);
+    console.log('changelogs:', changelogs);
+    console.log('catalog:', catalog);
   }, [dispatch, status]);
   
+  /*
+  const fetchEverything = async () => {
+    const resultAction = await dispatch(fetchCatalog())
+    if (fetchCatalog.fulfilled.match(resultAction)) {
+      const catalog = unwrapResult(resultAction)
+      
+    } else {
+      if (resultAction.payload) {
+        // Being that we passed in ValidationErrors to rejectType in `createAsyncThunk`, those types will be available here.
+        formikHelpers.setErrors(resultAction.payload.field_errors)
+      } else {
+        showToast('error', `Update failed: ${resultAction.error}`)
+      }
+    }
+  }
+*/
+
   function handleClick() {
-    let res = dispatch(fetchChangelogs());
-    console.log(res);
+    //let res = dispatch(fetchChangelogs());
+    //console.log(res);
     /*
     dispatch(getCatalog()).then(unwrapResult).then((result) => {
       console.log(result); // => 233
@@ -43,12 +64,17 @@ function App() {
           {(!changelogs || !changelogs.length) && !error && (
             <div>Loading data ...</div>
           )}
-          <ul>
-           {changelogs.map((changelog:any, index:number) => (
-              <li key={index}>[{index}] {changelog}</li>
-            ))}
-          
-          </ul>
+          {(catalog) && ( 
+            <div>
+              <h2>Unity Versions:</h2>
+              <i>(last updated: {new Date(catalog.date_modified).toLocaleString()})</i>
+              <ul>
+              {catalog.changelogs.map((changelog:CatalogEntry, index:number) => (
+                  <li key={index}>[{index}] {changelog.version} ({changelog.file_name})</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
         <p>
           <button type="button" onClick={handleClick}>
