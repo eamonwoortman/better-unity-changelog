@@ -4,6 +4,8 @@ import './App.css';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { fetchChangelogs, fetchCatalog, changelogSelector } from './features/changelogs/changelog-slice';
 import { CatalogEntry } from './types/changelog.types';
+import { Header } from './components/app/Header';
+import { Footer } from './components/app/Footer'
 
 function App() {
   const dispatch = useAppDispatch();
@@ -24,9 +26,11 @@ function App() {
   }, [dispatch, status]);
   
   return (
-    <div className="App">
-
-        <div>
+    <div>
+      <Header/>
+      
+      <main className="flex">
+        <div className="w-2/3 bg-gray-200 px-8 py-2"> <div>
           {error && <div>
             <pre>Failed to get the changelogs:</pre>
             <p><i>{error.message}</i></p>
@@ -36,18 +40,27 @@ function App() {
             <div>Loading data ...</div>
           )}
           {(catalog) && ( 
-            <div>
-              <h2>Unity Versions:</h2>
-              <i>(last updated: {new Date(catalog.date_modified).toLocaleString()})</i>
+            <article className="prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl 2xl:prose-2xl mx-auto">
+              <h5>Unity Versions</h5>
+              <small className="prose-sm"><i>(last updated: {new Date(catalog.date_modified).toLocaleString()})</i></small>
               <ul>
               {catalog.changelogs.map((changelog:CatalogEntry, index:number) => (
-                  <li key={index}>[{index}] {changelog.version} ({changelog.file_name})</li>
+                  <li key={index}>{changelog.version} ({changelog.file_name})</li>
                 ))}
               </ul>
-            </div>
+            </article>
           )}
-        </div>
+        </div></div>
+        <div className="w-1/3 bg-gray-500 px-2 py-2">right</div>
+      </main>
+    <Footer/>
+      {/*
+            <Header/>
+      <main className="mt-12">
        
+    </main>
+     */}
+
     </div>
   )
 }
