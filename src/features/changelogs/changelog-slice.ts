@@ -1,52 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import ChangelogDataService from '../../services/changelog.service';
-
-export interface CatalogEntry {
-  version: string,
-  file_name: string
-}
-
-export interface Catalog {
-    date_modified: string,
-    changelogs: CatalogEntry[]
-}
-
-interface ChangelogNode {
-  name: string,
-  children?: ChangelogNode[],
-  entries?: string[]
-}
-
-interface ChangelogRoot {
-  version: string,
-  url: string,
-  categories: ChangelogNode[]
-}
-
-interface ChangelogState {
-  catalog?: Catalog,
-  changelogs:any[],
-  status:string,
-  error:any
-}
-
-const initialState: ChangelogState = {
-  catalog: undefined,
-  changelogs: [],
-  status: 'idle',
-  error: null
-};
+import { Catalog, ChangelogRoot, ChangelogState  } from '../../types/changelog.types'
 
 const changelogsTransformation = async (catalog: Catalog) => {
-  let url = '/'
-  const genreRequestArray:any[] = []
+  const changelogRequestArray:any[] = []
   catalog.changelogs.forEach(changelog_entry => {
       const changelogId = changelog_entry.file_name;
-      genreRequestArray.push(ChangelogDataService.get(changelogId).then(response => (response.data as ChangelogRoot)))
+      changelogRequestArray.push(ChangelogDataService.get(changelogId).then(response => (response.data as ChangelogRoot)))
   })
 
   try {
-      return await Promise.all(genreRequestArray)
+      return await Promise.all(changelogRequestArray)
   } catch (error) {
       throw new Error(error)
   }
@@ -63,32 +27,34 @@ async function getCatalog(): Promise<Catalog> {
 
 /* fetchChangelogs */ 
 export const fetchChangelogs = createAsyncThunk('changelogs/fetchChangelogs',
-    async (catalog:Catalog, { rejectWithValue }) => {
+    async (catalog:Catalog) => {
         try {
             return await changelogsTransformation(catalog)
-        } catch (error) {
-            if (!error.response) {
-                throw error
-            }
-
-            return rejectWithValue(error.response.data)
+          } catch (error : Error) {
+            // just rethrow for now
+            throw error;
         }
     }
 )
 
 /* fetchCatalog */ 
 export const fetchCatalog = createAsyncThunk<Catalog>('changelogs/fetchCatalog',
-    async (_, { rejectWithValue }) => {
+    async (_) => {
         try {
             return await getCatalog();
-        } catch (error) {
-            if (!error.response) {
-                throw error
-            }
-            return rejectWithValue(error.response.data)
+        } catch (error : Error) {
+            // just rethrow for now
+            throw error;
         }
     }
 )
+
+const initialState: ChangelogState = {
+  catalog: undefined,
+  changelogs: [],
+  status: 'idle',
+  error: undefined
+};
 
 const changelogSlice = createSlice({
     name: 'changelog',
@@ -107,11 +73,7 @@ const changelogSlice = createSlice({
       }),
       builder.addCase(fetchCatalog.rejected, (state, action) => {
         state.status = 'error'
-        if (action.payload) {
-            state.error = action.payload.status_message
-        } else {
-            state.error = action.error
-        }
+        state.error = action.error
       }),
 
       /* fetchChangelogs */ 
@@ -126,11 +88,7 @@ const changelogSlice = createSlice({
         }),
         builder.addCase(fetchChangelogs.rejected, (state, action) => {
           state.status = 'error'
-          if (action.payload) {
-              state.error = action.payload.status_message
-          } else {
-              state.error = action.error
-          }
+          state.error = action.error
         })
     },
 });

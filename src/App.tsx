@@ -1,66 +1,37 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit'
 import './App.css';
 import { useAppDispatch, useAppSelector } from './app/hooks';
-import { fetchChangelogs, fetchCatalog, changelogSelector, CatalogEntry } from './features/changelogs/changelog-slice';
-import { amountAdded } from './features/counter/counter-slice';
-import logo from './logo.svg';
+import { fetchChangelogs, fetchCatalog, changelogSelector } from './features/changelogs/changelog-slice';
+import { CatalogEntry } from './types/changelog.types';
 
 function App() {
-  const count = useAppSelector((state)=>state.counter.value);
   const dispatch = useAppDispatch();
   const {catalog, changelogs, status, error} = useAppSelector(changelogSelector)
-  useEffect(() => {
-    if (status === 'idle') {
-      let result = dispatch(fetchCatalog()).then(unwrapResult).then(catalog => dispatch(fetchChangelogs(catalog)))
-      console.log('result:', result);
-      //dispatch(fetchChangelogs());
-    }
-    console.log('status:', status);
-    console.log('changelogs:', changelogs);
-    console.log('catalog:', catalog);
-  }, [dispatch, status]);
-  
-  /*
+
   const fetchEverything = async () => {
     const resultAction = await dispatch(fetchCatalog())
     if (fetchCatalog.fulfilled.match(resultAction)) {
-      const catalog = unwrapResult(resultAction)
-      
-    } else {
-      if (resultAction.payload) {
-        // Being that we passed in ValidationErrors to rejectType in `createAsyncThunk`, those types will be available here.
-        formikHelpers.setErrors(resultAction.payload.field_errors)
-      } else {
-        showToast('error', `Update failed: ${resultAction.error}`)
-      }
+      const catalog = unwrapResult(resultAction);
+      dispatch(fetchChangelogs(catalog));
     }
   }
-*/
 
-  function handleClick() {
-    //let res = dispatch(fetchChangelogs());
-    //console.log(res);
-    /*
-    dispatch(getCatalog()).then(unwrapResult).then((result) => {
-      console.log(result); // => 233
-    })
-    .catch((error) => {
-      console.error(error); // if there is an error
-    });*/
-    dispatch(amountAdded(3));
-  }
-
+  useEffect(() => {
+    if (status === 'idle') {
+      fetchEverything();
+    }
+  }, [dispatch, status]);
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          test
-        </p>
+
         <div>
-          {error && <div>{error}</div>}
+          {error && <div>
+            <pre>Failed to get the changelogs:</pre>
+            <p><i>{error.message}</i></p>
+          </div>}
+           
           {(!changelogs || !changelogs.length) && !error && (
             <div>Loading data ...</div>
           )}
@@ -76,34 +47,7 @@ function App() {
             </div>
           )}
         </div>
-        <p>
-          <button type="button" onClick={handleClick}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+       
     </div>
   )
 }
