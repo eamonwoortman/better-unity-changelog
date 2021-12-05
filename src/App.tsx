@@ -6,6 +6,7 @@ import { fetchChangelogs, fetchCatalog, changelogSelector } from './features/cha
 import { CatalogEntry } from './types/changelog.types';
 import { Header } from './components/app/Header';
 import { Footer } from './components/app/Footer'
+import { VersionSelector } from './components/app/VersionSelector';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -28,9 +29,8 @@ function App() {
   return (
     <div>
       <Header/>
-      
       <main className="flex">
-        <div className="w-2/3 bg-gray-200 px-8 py-2"> <div>
+        <div className="flex-1 bg-gray-200 px-8 py-2"> <div>
           {error && <div>
             <pre>Failed to get the changelogs:</pre>
             <p><i>{error.message}</i></p>
@@ -51,7 +51,9 @@ function App() {
             </article>
           )}
         </div></div>
-        <div className="w-1/3 bg-gray-500 px-2 py-2">right</div>
+        <div className="flex-shrink-0 w-64 bg-gray-2 00 px-2 py-2">
+          <VersionSelector catalog={catalog}/>
+        </div>
       </main>
     <Footer/>
       {/*
