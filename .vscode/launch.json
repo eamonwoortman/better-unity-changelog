@@ -8,9 +8,9 @@
             "type": "node",
             "request": "launch",
             "name": "Launch via NPM",
-            "runtimeExecutable": "npm",
+            "runtimeExecutable": "yarn",
             "cwd": "${workspaceFolder}",
-            "runtimeArgs": ["run", "dev"],
+            "runtimeArgs": ["dev"],
             "port": 5858
         }
     ]
