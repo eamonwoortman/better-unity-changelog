@@ -1,8 +1,9 @@
 
+/* catalog  */ 
 export interface CatalogEntry {
     version: string,
-    file_name: string,
-    slug?: string
+    slug: string,
+    file_name: string
   }
   
 export interface Catalog {
@@ -10,6 +11,7 @@ export interface Catalog {
     changelogs: CatalogEntry[]
 }
 
+/* changelog */ 
 export interface ChangelogNode {
     name: string,
     children?: ChangelogNode[],
@@ -18,13 +20,14 @@ export interface ChangelogNode {
 
 export interface ChangelogRoot {
     version: string,
+    slug: string,
     url: string,
     categories: ChangelogNode[]
 }
 
 export interface ChangelogState {
     catalog?: Catalog,
-    changelogs:any[],
+    changelogs:ChangelogRoot[],
     status:string,
     error?: any
 }

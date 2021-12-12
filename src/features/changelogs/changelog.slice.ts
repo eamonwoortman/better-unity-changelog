@@ -51,7 +51,7 @@ const catalogTransformation = (catalog: Catalog) => {
 export const fetchCatalog = createAsyncThunk<Catalog>('changelogs/fetchCatalog',
     async (_) => {
         try {
-          return await getCatalog().then(catalogTransformation);
+          return await getCatalog();
         } catch (error : Error) {
             // just rethrow for now
             throw error;
@@ -103,11 +103,5 @@ const changelogSlice = createSlice({
     },
 });
 
-
-/*
-const { reducer } = changelogSlice;
-export default reducer;
-*/
-//export const { getCatalog } = changelogSlice.caseReducers;
 export const changelogSelector = state => state.changelog
 export default changelogSlice.reducer;

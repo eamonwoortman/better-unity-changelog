@@ -1,29 +1,11 @@
-import { unwrapResult } from '@reduxjs/toolkit';
 import type { NextPage } from 'next';
 import Link from 'next/link';
-import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { changelogSelector, fetchCatalog, fetchChangelogs } from './changelog.slice';
+import { useAppSelector } from '../../app/hooks';
+import { changelogSelector } from './changelog.slice';
 import { CatalogEntry } from './changelog.types';
 
 const ChangelogsPage: NextPage = () => {
-    const dispatch = useAppDispatch();
-    const {catalog, changelogs, status, error} = useAppSelector(changelogSelector)
-  
-    const fetchEverything = async () => {
-      const resultAction = await dispatch(fetchCatalog())
-      if (fetchCatalog.fulfilled.match(resultAction)) {
-        const catalog = unwrapResult(resultAction);
-        dispatch(fetchChangelogs(catalog));
-      }
-    }
-  
-    useEffect(() => {
-      if (status === 'idle') {
-        fetchEverything();
-      }
-    }, [dispatch, status]);
-  
+  const {catalog, changelogs, status, error} = useAppSelector(changelogSelector)
     
   return (
     <main className="flex">
