@@ -29,7 +29,7 @@ const ChangelogPage: NextPage = () => {
     <div className="flex flex-col items-center justify-center py-2">
       {changelog && (
         <div>
-        <ChangelogContainer changelog={changelog} />
+          <ChangelogContainer root={changelog} />
         </div>
       )}
     </div>

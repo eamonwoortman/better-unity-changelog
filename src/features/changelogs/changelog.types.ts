@@ -13,7 +13,7 @@ export interface Catalog {
 
 /* changelog */ 
 export interface ChangelogNode {
-    name: string,
+    name?: string,
     children?: ChangelogNode[],
     entries?: string[]
 }
@@ -22,7 +22,7 @@ export interface ChangelogRoot {
     version: string,
     slug: string,
     url: string,
-    categories: ChangelogNode[]
+    categories: ChangelogNode
 }
 
 export interface ChangelogState {
