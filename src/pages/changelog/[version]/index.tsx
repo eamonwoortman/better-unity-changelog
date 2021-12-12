@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../../../app/hooks'
+import ChangelogContainer from '../../../components/changelog/ChangelogContainer'
 import { changelogSelector } from '../../../features/changelogs/changelog.slice'
 import { ChangelogRoot } from '../../../features/changelogs/changelog.types'
 
@@ -27,8 +28,8 @@ const ChangelogPage: NextPage = () => {
   return (
     <div className="flex flex-col items-center justify-center py-2">
       {changelog && (
-        <div className="text-white font-base text-xs text-center p-1.5 bg-black">
-            changelog, version: {changelog.slug}!
+        <div>
+        <ChangelogContainer changelog={changelog} />
         </div>
       )}
     </div>
