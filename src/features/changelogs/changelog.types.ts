@@ -1,7 +1,8 @@
 
 export interface CatalogEntry {
     version: string,
-    file_name: string
+    file_name: string,
+    slug?: string
   }
   
 export interface Catalog {

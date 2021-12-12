@@ -1,5 +1,6 @@
 import { unwrapResult } from '@reduxjs/toolkit';
 import type { NextPage } from 'next';
+import Link from 'next/link';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { changelogSelector, fetchCatalog, fetchChangelogs } from './changelog.slice';
@@ -41,7 +42,10 @@ const ChangelogsPage: NextPage = () => {
               <small className="prose-sm"><i>(last updated: {new Date(catalog.date_modified).toLocaleString()})</i></small>
               <ul>
               {catalog.changelogs.map((changelog:CatalogEntry, index:number) => (
-                  <li key={index}>{changelog.version} ({changelog.file_name})</li>
+                  <li key={index}>
+                    <Link href={"/changelog/" + changelog.slug}><a className="text-blue-500">{changelog.version} ({changelog.file_name})</a></Link>
+                    
+                  </li>
                 ))}
               </ul>
             </article>

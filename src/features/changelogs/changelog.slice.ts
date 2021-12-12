@@ -5,8 +5,8 @@ import { Catalog, ChangelogRoot, ChangelogState } from './changelog.types';
 const changelogsTransformation = async (catalog: Catalog) => {
   const changelogRequestArray:any[] = []
   catalog.changelogs.forEach(changelog_entry => {
-      const changelogId = changelog_entry.file_name;
-      changelogRequestArray.push(ChangelogDataService.get(changelogId).then(response => (response.data as ChangelogRoot)))
+      const changelogFile = changelog_entry.file_name;
+      changelogRequestArray.push(ChangelogDataService.get(changelogFile).then(response => (response.data as ChangelogRoot)))
   })
 
   try {
@@ -37,11 +37,21 @@ export const fetchChangelogs = createAsyncThunk('changelogs/fetchChangelogs',
     }
 )
 
+/* transforms catalog, adds slugs to each entry  */ 
+const catalogTransformation = (catalog: Catalog) => {
+  catalog.changelogs.forEach(changelog_entry => {
+    const slug = changelog_entry.file_name.replace('.json', '');
+    changelog_entry.slug = slug;
+  });
+  return catalog;
+}
+
+
 /* fetchCatalog */ 
 export const fetchCatalog = createAsyncThunk<Catalog>('changelogs/fetchCatalog',
     async (_) => {
         try {
-            return await getCatalog();
+          return await getCatalog().then(catalogTransformation);
         } catch (error : Error) {
             // just rethrow for now
             throw error;
