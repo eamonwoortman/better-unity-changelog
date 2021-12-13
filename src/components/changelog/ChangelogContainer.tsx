@@ -1,20 +1,22 @@
 import { useState } from "react";
 import { ChangelogNode, ChangelogRoot } from "../../features/changelogs/changelog.types";
+import Chevron from "../generic/Chevron";
 
 type ContainerProps = {
     root: ChangelogRoot;
     // filters...
 }; 
 
-const Node = function ({ node, ...props }) {
+const Node = function ({ node, isOpen, ...props }) {
     return (
       <div
         className={`my-1 flex flex-row text-left items-center cursor-pointer parent select-none relative rounded pl-2 hover:bg-gray-200 dark:hover:bg-gray-800 `}
         style={{paddingTop: 1, paddingBottom: 1}} {...props}>   
         <span className={`dark:text-gray-300 text-gray-600 font-semibold`}>{node.name}</span>  
             <div className="ml-auto mr-4">
-                {node.entries && <div>
-                    <span>Entries: {node.entries.length}</span>
+                {node.entries && <div className={`my-1 flex flex-row text-left items-center cursor-pointer parent select-none relative rounded pl-2 hover:bg-gray-200 dark:hover:bg-gray-800 `}
+        style={{paddingTop: 1, paddingBottom: 1}}>
+                    <span className="dark:text-gray-300 text-gray-600 font-semibold">Entries: {node.entries.length}</span>
                 </div>}
             </div>
       </div>
@@ -28,8 +30,11 @@ const RenderNode = ({node}: { node: ChangelogNode }) => {
     }
     return (
       <div>
-        <Node node={node} onClick={onClickHandler}/>
-         
+        <div className="flex flex-row"  onClick={onClickHandler}>
+          <Chevron expanded={isOpen} />
+          <Node node={node} isOpen={isOpen}/>
+        </div>
+        
         {node.children && isOpen && (
           <div
             style={{
