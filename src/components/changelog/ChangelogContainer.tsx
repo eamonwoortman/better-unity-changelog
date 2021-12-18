@@ -1,72 +1,109 @@
 import { useState } from "react";
 import { ChangelogNode, ChangelogRoot } from "../../features/changelogs/changelog.types";
 import Chevron from "../generic/Chevron";
+import Heading from "../generic/Heading";
+import { LinkIcon } from '@heroicons/react/solid'
 
 type ContainerProps = {
     root: ChangelogRoot;
     // filters...
+    showSubCategories?: boolean;
 }; 
 
-const Node = function ({ node, isOpen, ...props }) {
-    return (
-      <div
-        className={`my-1 flex flex-row text-left items-center cursor-pointer parent select-none relative rounded pl-2 hover:bg-gray-200 dark:hover:bg-gray-800 `}
-        style={{paddingTop: 1, paddingBottom: 1}} {...props}>   
-        <span className={`dark:text-gray-300 text-gray-600 font-semibold`}>{node.name}</span>  
-            <div className="ml-auto mr-4">
-                {node.entries && <div className={`my-1 flex flex-row text-left items-center cursor-pointer parent select-none relative rounded pl-2 hover:bg-gray-200 dark:hover:bg-gray-800 `}
-        style={{paddingTop: 1, paddingBottom: 1}}>
-                    <span className="dark:text-gray-300 text-gray-600 font-semibold">Entries: {node.entries.length}</span>
-                </div>}
-            </div>
-      </div>
-    )
-  }
+const ExtendedEntriesNode = function ({ node, depth }) {
+  const HeadingStartSize:number = 2;
 
-const RenderNode = ({node}: { node: ChangelogNode }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const onClickHandler = function() {
-        setIsOpen(!isOpen);
+  return (
+    <>
+      <Heading type={`h`+(HeadingStartSize + depth)} className={`dark:text-gray-300 text-gray-600 font-semibold`}>{node.name}</Heading>  
+
+      {node.entries &&
+          <ul className="list-disc">
+              {node.entries.map((entry) => {
+                return (
+                  <li>
+                    {entry}
+                  </li>
+                );
+              })}
+            </ul>
+      }
+    </>
+  )
+}
+
+const ConditionalWrapper = ({ condition, wrapper, children }) => 
+  condition ? wrapper(children) : children;
+
+const SimpleEntriesNode = function ({ node, depth }) {
+  const HeadingStartSize:number = 2;
+
+  return (
+    <>
+    {(depth == 0) && 
+      <Heading type={`h`+(HeadingStartSize + depth)} className={`dark:text-gray-300 text-gray-600 font-semibold`}>{node.name}</Heading>  
     }
+
+      {node.entries && <>
+        <ConditionalWrapper
+        condition={depth == 0 && node.entries}
+        wrapper={children => <ul className="list-disc">{children}</ul>}
+      >
+              {node.entries.map((entry, index) => {
+                return (
+                  <li key={index}>
+                    {node.name}: {entry}
+                  </li>
+                );
+              })}
+                    </ConditionalWrapper>
+        </>
+      }
+
+    </>
+  )
+}
+
+const RenderNode = ({node, depth = 0, showSubCategories}: { node: ChangelogNode, depth?:number, showSubCategories:boolean}) => {
     return (
-      <div>
-        <div className="flex flex-row"  onClick={onClickHandler}>
-          <Chevron expanded={isOpen} />
-          <Node node={node} isOpen={isOpen}/>
-        </div>
+      <>
+      {showSubCategories ? (
+        <ExtendedEntriesNode {...{node, depth}}/>
+      ) : (<SimpleEntriesNode {...{node, depth}}/>)
+      }
         
-        {node.children && isOpen && (
-          <div
-            style={{
-              margin: "2px 0px 2px 12px",
-              paddingLeft: 10,
-              borderLeft: "1px dashed gray",
-            }}
-          >
+        {node.children && (
+          <div>
             {node.children.map((nodeChild, index) => {
               return (
                 <RenderNode
                   key={index}
                   node={nodeChild}
+                  depth={depth + 1}
+                  showSubCategories={showSubCategories}
                 />
               );
             })}
           </div>
         )}
-      </div>
+      </>
     );
   };
 
 // Easiest way to declare a Function Component; return type is inferred.
-export default function ChangelogContainer({ root }: ContainerProps) {
+export default function ChangelogContainer({ root, showSubCategories = false }: ContainerProps) {
     return(
         <div>
-            Changelog, version: {root.version}!
-            categories: {root.categories.children.length}
+              <a href={root.url} target="_blank" className="no-underline hover:underline text-cyan-600">
+                <div className="flex space-x-2">
+                  <h1>{root.version}</h1>
+                  <div className="flex items-center justify-center"><LinkIcon className="h-10 w-10 text-blue-500"/></div>
+                </div>
+              </a>
             
-            {root.categories.children.map((node, index) => (
-                <RenderNode key={index} node={node} />
-            ))}
+              {root.categories.children.map((node, index) => (
+                  <RenderNode key={index} node={node} showSubCategories={showSubCategories} />
+              ))}
         </div>
     )
 }
