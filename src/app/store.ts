@@ -1,11 +1,25 @@
-import { configureStore } from '@reduxjs/toolkit';
-import changelogSlice from '../features/changelogs/changelog-slice';
+import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit'
+import changelogsReducer from '../features/changelogs/changelog.slice'
+import counterReducer from '../features/counter/counterSlice'
 
-export const store = configureStore({
-    reducer: { 
-        changelog: changelogSlice,
-    },
-});
 
-export type AppDispatch = typeof store.dispatch;
-export type RootState = ReturnType<typeof store.getState>;
+export function makeStore() {
+  return configureStore({
+    reducer: { counter: counterReducer, changelog: changelogsReducer },
+  })
+}
+
+const store = makeStore()
+
+export type AppState = ReturnType<typeof store.getState>
+
+export type AppDispatch = typeof store.dispatch
+
+export type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  AppState,
+  unknown,
+  Action<string>
+>
+
+export default store
