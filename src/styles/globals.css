@@ -4,18 +4,23 @@
 @layer base {
     h1 {
         @apply text-5xl;
+        @apply my-5;
     }
     h2 {
         @apply text-3xl;
+        @apply my-3;
     }
     h3 {
         @apply text-2xl;
+        @apply my-3;
     }
     h4 {
         @apply text-xl;
+        @apply my-3;
     }
     h5 {
         @apply text-lg;
+        @apply my-3;
     }
     /* ... */
 }

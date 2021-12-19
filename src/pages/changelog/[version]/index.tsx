@@ -25,15 +25,25 @@ const ChangelogPage: NextPage = () => {
       setChangelog(matchingChangelog);
   }, [changelogs]);
 
-  return (
-    <div className="flex flex-col items-center justify-center py-2">
+      {/*
+    <div className="grid grid-cols-3 gap-4">
+      <div className="flex justify-center">
+      This should be on the left
+      </div>
       {changelog && (
-        <div>
-          <ChangelogContainer root={changelog} />
-        </div>
+          <div className="col-span-2"><ChangelogContainer root={changelog} /></div>
       )}
     </div>
-  )
+     */}
+
+  return (<div className="grid grid-cols-3 gap-4">
+  <div className="flex justify-center">
+  This should be on the left
+  </div>
+  {changelog && (
+      <div className="col-span-2"><ChangelogContainer root={changelog} /></div>
+  )}
+</div>)
 }
 
 export default ChangelogPage
