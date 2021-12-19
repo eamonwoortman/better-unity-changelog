@@ -85,15 +85,15 @@ const RenderNode = ({node, depth = 0, showSubCategories}: { node: ChangelogNode,
 export default function ChangelogContainer({ root, showSubCategories = false }: ContainerProps) {
     return(
         <>
-                <div className="flex space-x-2">
-                  <h1 className="text-cyan-600">{root.version}</h1>
-                  <div className="flex items-center justify-center"><a href={root.url} target="_blank"><ExternalLinkIcon className="h-5 w-5 text-cyan-600"/></a></div>
-                </div>
-
-            
-              {root.categories.children.map((node, index) => (
-                  <RenderNode key={index} node={node} showSubCategories={showSubCategories} />
-              ))}
+          <div className="flex space-x-2">
+            <h1 className="text-cyan-600">{root.version}</h1>
+            <div className="flex items-center justify-center">
+              <a href={root.url} target="_blank"><ExternalLinkIcon className="h-5 w-5 text-cyan-600"/></a>
+            </div>
+          </div>
+          {root.categories.children.map((node, index) => (
+            <RenderNode key={index} node={node} showSubCategories={showSubCategories} />
+          ))}
         </>
     )
 }
