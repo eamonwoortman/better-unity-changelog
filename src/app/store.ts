@@ -1,11 +1,15 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit'
 import changelogsReducer from '../features/changelogs/changelog.slice'
 import counterReducer from '../features/counter/counterSlice'
-
+import filtersSlice from '../features/filters/filters.slice'
 
 export function makeStore() {
   return configureStore({
-    reducer: { counter: counterReducer, changelog: changelogsReducer },
+    reducer: { 
+      counter: counterReducer, 
+      changelog: changelogsReducer,
+      filters: filtersSlice
+    },
   })
 }
 

@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { Fragment, useState } from 'react'
+import { Fragment } from 'react'
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from '@heroicons/react/solid'
+import { useAppSelector } from '../../app/hooks';
+import { filtersSelector } from '../../features/filters/filters.slice';
 
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
@@ -12,34 +14,34 @@ const sortOptions = [
   { name: 'Price: High to Low', href: '#', current: false },
 ]
 const subCategories = [
-  { name: 'Totes', href: '#' },
+ /* { name: 'Totes', href: '#' },
   { name: 'Backpacks', href: '#' },
   { name: 'Travel Bags', href: '#' },
   { name: 'Hip Bags', href: '#' },
-  { name: 'Laptop Sleeves', href: '#' },
+  { name: 'Laptop Sleeves', href: '#' },*/
 ]
 const filters = [
+  {
+    id: 'category',
+    name: 'Category',
+    options: [
+      { value: '2d', label: '2D', checked: false },
+      { value: 'ai', label: 'AI', checked: false },
+      { value: 'linux', label: 'Linux', checked: false },
+      { value: 'opengl', label: 'OpenGL', checked: false },
+      { value: 'shaders', label: 'Shaders', checked: false },
+    ],
+  },
   {
     id: 'color',
     name: 'Color',
     options: [
       { value: 'white', label: 'White', checked: false },
       { value: 'beige', label: 'Beige', checked: false },
-      { value: 'blue', label: 'Blue', checked: true },
+      { value: 'blue', label: 'Blue', checked: false },
       { value: 'brown', label: 'Brown', checked: false },
       { value: 'green', label: 'Green', checked: false },
       { value: 'purple', label: 'Purple', checked: false },
-    ],
-  },
-  {
-    id: 'category',
-    name: 'Category',
-    options: [
-      { value: 'new-arrivals', label: 'New Arrivals', checked: false },
-      { value: 'sale', label: 'Sale', checked: false },
-      { value: 'travel', label: 'Travel', checked: true },
-      { value: 'organization', label: 'Organization', checked: false },
-      { value: 'accessories', label: 'Accessories', checked: false },
     ],
   },
   {
@@ -61,6 +63,13 @@ function classNames(...classes) {
 }
 
 export function ViewFilterBar () {
+
+  const { category_filters } = useAppSelector(filtersSelector)
+  
+  React.useEffect(() => {
+    
+  }, [category_filters]);
+
   return (
     <div>
         {/* Filters */}
@@ -77,7 +86,7 @@ export function ViewFilterBar () {
             </ul>
 
             {filters.map((section) => (
-            <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6">
+            <Disclosure as="div" defaultOpen={true} key={section.id} className="border-b border-gray-200 py-6">
                 {({ open }) => (
                 <>
                     <h3 className="-my-3 flow-root">
