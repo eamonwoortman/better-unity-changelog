@@ -1,10 +1,10 @@
+import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
+import { XIcon } from '@heroicons/react/outline';
+import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon } from '@heroicons/react/solid';
 import * as React from 'react';
-import { Fragment } from 'react'
-import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
-import { XIcon } from '@heroicons/react/outline'
-import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from '@heroicons/react/solid'
-import { useAppSelector } from '../../app/hooks';
-import { filtersSelector } from '../../features/filters/filters.slice';
+import { Fragment, useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { add_category_filter, filtersSelector, remove_category_filter } from '../../features/filters/filters.slice';
 
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
@@ -20,7 +20,24 @@ const subCategories = [
   { name: 'Hip Bags', href: '#' },
   { name: 'Laptop Sleeves', href: '#' },*/
 ]
-const filters = [
+
+
+
+interface FilterCategoryOption {
+  value: string;
+  label: string;
+  checked: boolean;
+}
+
+interface FilterCategory {
+  id: string;
+  name: string;
+  options: FilterCategoryOption[];
+}
+
+
+
+const defaultCategoryFilters = [
   {
     id: 'category',
     name: 'Category',
@@ -32,6 +49,7 @@ const filters = [
       { value: 'shaders', label: 'Shaders', checked: false },
     ],
   },
+  /*
   {
     id: 'color',
     name: 'Color',
@@ -53,9 +71,9 @@ const filters = [
       { value: '12l', label: '12L', checked: false },
       { value: '18l', label: '18L', checked: false },
       { value: '20l', label: '20L', checked: false },
-      { value: '40l', label: '40L', checked: true },
+      { value: '40l', label: '40L', checked: false },
     ],
-  },
+  },*/
 ]
 
 function classNames(...classes) {
@@ -63,12 +81,26 @@ function classNames(...classes) {
 }
 
 export function ViewFilterBar () {
+  const dispatch = useAppDispatch();
+  const { category_filters } = useAppSelector(filtersSelector);
+  const [ filters, setFilters ] = useState<FilterCategory[]>(defaultCategoryFilters)
 
-  const { category_filters } = useAppSelector(filtersSelector)
-  
-  React.useEffect(() => {
-    
+  const checkFilterOptions = () => {
+    category_filters.map(filter => filters.map(filterCategory => filterCategory.options.map(filterOption => filterOption.checked = filterOption.value === filter.id)));
+  }
+
+  useEffect(() => {
+    checkFilterOptions();
   }, [category_filters]);
+
+  const handleFilterChecked = (filterOption, isChecked) => {
+    var option = { id: filterOption.value, name: filterOption.label };
+    if (isChecked) {
+      dispatch(add_category_filter(option));
+    } else {
+      dispatch(remove_category_filter(option));
+    }
+  };
 
   return (
     <div>
@@ -86,7 +118,7 @@ export function ViewFilterBar () {
             </ul>
 
             {filters.map((section) => (
-            <Disclosure as="div" defaultOpen={true} key={section.id} className="border-b border-gray-200 py-6">
+            <Disclosure as="div" defaultOpen={true} key={section.id} className="border-b border-gray-200 py-6 select-none">
                 {({ open }) => (
                 <>
                     <h3 className="-my-3 flow-root">
@@ -111,13 +143,13 @@ export function ViewFilterBar () {
                             defaultValue={option.value}
                             type="checkbox"
                             defaultChecked={option.checked}
+                            onChange={(e) => handleFilterChecked(option, e.target.checked)}
                             className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
                             />
                             <label
                             htmlFor={`filter-${section.id}-${optionIdx}`}
-                            className="ml-3 text-sm text-gray-600"
-                            >
-                            {option.label}
+                            className="ml-3 text-sm text-gray-600 select-none">
+                              {option.label}
                             </label>
                         </div>
                         ))}
@@ -188,7 +220,7 @@ return (
   </div>
 )}
 
-export const MobileViewFilter = ({mobileFiltersOpen, setMobileFiltersOpen}) => {
+export const MobileViewFilter = ({mobileFiltersOpen, setMobileFiltersOpen, filters}) => {
   return(<Transition.Root show={mobileFiltersOpen} as={Fragment}>
     <Dialog as="div" className="fixed inset-0 flex z-40 lg:hidden" onClose={setMobileFiltersOpen}>
       <Transition.Child

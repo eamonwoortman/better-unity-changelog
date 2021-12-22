@@ -1,11 +1,9 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
-import type { AppState } from '../../app/store'
-
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { AppState } from '../../app/store';
 
 export interface CategoryFilterOption {
-    id:string;
-    label:string;
+    id: string;
+    name: string;
 }
 
 export interface FilterState {
@@ -24,16 +22,16 @@ export const filtersSlice = createSlice({
 
   reducers: {
     add_category_filter : (state, action: PayloadAction<CategoryFilterOption>) => {
-        if (state.category_filters.includes(action.payload)) {
+        if (!action.payload || state.category_filters.includes(action.payload)) {
             return;
         }
         state.category_filters.push(action.payload);
     },
     remove_category_filter : (state, action: PayloadAction<CategoryFilterOption>) => {
-        if (state.category_filters.includes(action.payload)) {
+        if (!action.payload || state.category_filters.includes(action.payload)) {
             return;
         }
-        state.category_filters.push(action.payload);
+        state.category_filters = state.category_filters.filter(obj => obj.id !== action.payload.id);
     },
 
     set_search_text : (state, action: PayloadAction<string>) => {
