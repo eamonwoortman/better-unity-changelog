@@ -1,8 +1,8 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import { useAppSelector } from '../../app/hooks';
-import { changelogSelector } from './changelog.slice';
-import { CatalogEntry } from './changelog.types';
+import { changelogSelector } from '../../features/changelogs/changelog.slice';
+import { CatalogEntry } from '../../features/changelogs/changelog.types';
 
 const ChangelogsPage: NextPage = () => {
   const {catalog, changelogs, status, error} = useAppSelector(changelogSelector)
