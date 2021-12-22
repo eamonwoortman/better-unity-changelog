@@ -2,7 +2,7 @@ import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/outline';
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon } from '@heroicons/react/solid';
 import * as React from 'react';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { add_category_filter, filtersSelector, remove_category_filter } from '../../features/filters/filters.slice';
 
@@ -29,7 +29,7 @@ interface FilterCategoryOption {
   checked: boolean;
 }
 
-interface FilterCategory {
+export interface FilterCategory {
   id: string;
   name: string;
   options: FilterCategoryOption[];
@@ -37,7 +37,7 @@ interface FilterCategory {
 
 
 
-const defaultCategoryFilters = [
+export const defaultCategoryFilters = [
   {
     id: 'category',
     name: 'Category',
@@ -80,10 +80,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export function ViewFilterBar () {
+export function ViewFilterBar ({filters}) {
   const dispatch = useAppDispatch();
   const { category_filters } = useAppSelector(filtersSelector);
-  const [ filters, setFilters ] = useState<FilterCategory[]>(defaultCategoryFilters)
 
   const checkFilterOptions = () => {
     category_filters.map(filter => filters.map(filterCategory => filterCategory.options.map(filterOption => filterOption.checked = filterOption.value === filter.id)));

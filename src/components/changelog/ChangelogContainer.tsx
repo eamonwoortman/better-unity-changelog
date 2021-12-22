@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { ExternalLinkIcon } from '@heroicons/react/solid';
+import { useEffect, useState } from "react";
+import { useAppSelector } from "../../app/hooks";
 import { ChangelogNode, ChangelogRoot } from "../../features/changelogs/changelog.types";
-import Chevron from "../generic/Chevron";
+import { filtersSelector } from "../../features/filters/filters.slice";
 import Heading from "../generic/Heading";
-import { ExternalLinkIcon } from '@heroicons/react/solid'
 
 type ContainerProps = {
     root: ChangelogRoot;
@@ -82,7 +83,41 @@ const RenderNode = ({node, depth = 0, showSubCategories}: { node: ChangelogNode,
     );
   };
 
+
+  function copy(o) {
+    return Object.assign({}, o)
+  }
+  
 export default function ChangelogContainer({ root, showSubCategories = false }: ContainerProps) {
+  const {category_filters} = useAppSelector(filtersSelector);
+  const [filteredCategories, setFilteredCategories] = useState<ChangelogNode[]>(root.categories.children);
+  
+
+  function filter(nodes:ChangelogNode[]) {
+    var matches = [];
+    if (!Array.isArray(nodes)) return matches;
+
+    nodes.forEach(function(node) {
+        if (category_filters.some(u => u.name.includes(node.name)) || !category_filters.length) {
+          matches.push(node);
+        } else {
+            let childResults = filter(node.children);
+            if (childResults.length)
+                matches.push(Object.assign({}, node, { children: childResults }));
+        }
+    })
+    return matches;
+  }
+
+  const applyFilters = () => {
+    console.log(category_filters);
+    setFilteredCategories(filter(root.categories.children));    
+  }
+  
+  useEffect(() => {
+    applyFilters();
+  }, [category_filters]);
+
     return(
         <>
           <div className="flex space-x-2">
@@ -91,7 +126,7 @@ export default function ChangelogContainer({ root, showSubCategories = false }: 
               <a href={root.url} target="_blank"><ExternalLinkIcon className="h-5 w-5 text-cyan-600"/></a>
             </div>
           </div>
-          {root.categories.children.map((node, index) => (
+          {filteredCategories.map((node, index) => (
             <RenderNode key={index} node={node} showSubCategories={showSubCategories} />
           ))}
         </>
