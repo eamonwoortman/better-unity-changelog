@@ -1,4 +1,5 @@
 import { ExternalLinkIcon } from '@heroicons/react/solid';
+import DOMPurify from 'dompurify';
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 import { ChangelogNode, ChangelogRoot, ExtendedEntryType } from "../../features/changelogs/changelog.types";
@@ -28,9 +29,8 @@ function RenderChangelogEntry (entry: ExtendedEntryType | string) : string {
   if (typeof entry === 'string') {
     return entry;
   }
-  const extendedEntry: ExtendedEntryType = entry;
   const pill = CreatePill(entry.label)
-  return `${entry.title} ${pill}`
+  return DOMPurify.sanitize(`${entry.title} ${pill}`)
 }
 
 
