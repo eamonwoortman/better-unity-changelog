@@ -12,24 +12,27 @@ type ContainerProps = {
     showSubCategories?: boolean;
 }; 
 
+const MissingBadgeColor = 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
 const LabelColors = {
-  'Added': 'bg-green-700 text-green-100',
-  'Removed': 'bg-red-600 text-red-100',
-  'Updated': 'bg-yellow-500 text-yellow-100',
-  'Fixed': 'bg-blue-500 text-blue-100',
-  'Changed': 'bg-gray-100 text-gray-400'
+  'Added': 'bg-green-100 text-green-800 dark:bg-green-200 dark:text-green-900',
+  'Removed': 'bg-red-100 text-red-800 dark:bg-red-200 dark:text-red-900',
+  'Updated': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-200 dark:text-indigo-900',
+  'Fixed': 'bg-blue-100 text-blue-800 dark:bg-blue-200 dark:text-blue-800',
+  'Changed': 'bg-purple-100 text-purple-800 dark:bg-purple-200 dark:text-purple-900',
+  'Improved': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-200 dark:text-yellow-900',
+  'Deprecated': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-200 dark:text-yellow-900'
 }
 
-function CreatePill(label: string) {
-  const color = (label in LabelColors) ? LabelColors[label] : 'bg-gray-200';
-  return `<a class='${color} py-1 px-2 rounded text-xs font-bold ml-1'>${label}</a>`
+function CreateLabelBadge(label: string) {
+  const color = (label in LabelColors) ? LabelColors[label] : MissingBadgeColor;
+  return `<span class='${color} text-xs font-semibold mr-2 px-2.5 py-0.5 rounded'>${label}</span>`
 } 
 
 function RenderChangelogEntry (entry: ExtendedEntryType | string) : string {
   if (typeof entry === 'string') {
     return entry;
   }
-  const pill = CreatePill(entry.label)
+  const pill = CreateLabelBadge(entry.label)
   return DOMPurify.sanitize(`${entry.title} ${pill}`)
 }
 
