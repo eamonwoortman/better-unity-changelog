@@ -7,11 +7,13 @@ export interface CategoryFilterOption {
 }
 
 export interface FilterState {
+    use_simple_view: boolean;
     category_filters: CategoryFilterOption[];
     search_text: string;
 }
 
 const initialState: FilterState = {
+    use_simple_view: false,
     category_filters:  [],
     search_text: ""
 }
@@ -34,6 +36,10 @@ export const filtersSlice = createSlice({
         state.category_filters = state.category_filters.filter(obj => obj.id !== action.payload.id);
     },
 
+    set_simple_view : (state, action: PayloadAction<boolean>) => {
+        state.use_simple_view = action.payload;
+    }, 
+
     set_search_text : (state, action: PayloadAction<string>) => {
         state.search_text = action.payload;
     },
@@ -45,7 +51,7 @@ export const filtersSlice = createSlice({
 
 })
 
-export const { add_category_filter, remove_category_filter, set_search_text, clear_search_text } = filtersSlice.actions
+export const { add_category_filter, remove_category_filter, set_search_text, clear_search_text, set_simple_view } = filtersSlice.actions
 
 export const selectSearchText = (state: AppState) => state.filters.search_text;
 export const selectCategoryFilters = (state: AppState) => state.filters.category_filters;

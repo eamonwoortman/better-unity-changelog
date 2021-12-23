@@ -8,8 +8,6 @@ import Heading from "../generic/Heading";
 
 type ContainerProps = {
     root: ChangelogRoot;
-    // filters...
-    showSubCategories?: boolean;
 }; 
 
 const MissingBadgeColor = 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
@@ -36,6 +34,8 @@ function RenderChangelogEntry (entry: ExtendedEntryType | string) : string {
   return DOMPurify.sanitize(`${entry.title} ${pill}`)
 }
 
+const ConditionalWrapper = ({ condition, wrapper, children }) => 
+  condition ? wrapper(children) : children ?? null;
 
 const ExtendedEntriesNode = function ({ node, depth }) {
   const HeadingStartSize:number = 2;
@@ -54,9 +54,6 @@ const ExtendedEntriesNode = function ({ node, depth }) {
 
   </>)
 }
-
-const ConditionalWrapper = ({ condition, wrapper, children }) => 
-  condition ? wrapper(children) : children ?? null;
 
 const SimpleEntriesNode = function ({ node, depth }) {
   const HeadingStartSize:number = 2;
@@ -108,8 +105,8 @@ const RenderNode = ({node, depth = 0, showSubCategories}: { node: ChangelogNode,
   };
 
 
-export default function ChangelogContainer({ root, showSubCategories = false }: ContainerProps) {
-  const {category_filters} = useAppSelector(filtersSelector);
+export default function ChangelogContainer({ root }: ContainerProps) {
+  const {category_filters, use_simple_view} = useAppSelector(filtersSelector);
   const [filteredCategories, setFilteredCategories] = useState<ChangelogNode[]>(root.categories.children);
   
 
@@ -147,7 +144,7 @@ export default function ChangelogContainer({ root, showSubCategories = false }: 
             </div>
           </div>
           {filteredCategories.map((node, index) => (
-            <RenderNode key={index} node={node} showSubCategories={showSubCategories} />
+            <RenderNode key={index} node={node} showSubCategories={!use_simple_view} />
           ))}
         </>
     )
