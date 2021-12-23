@@ -22,5 +22,9 @@
         @apply text-lg;
         @apply my-3;
     }
+
+    a {
+        @apply text-blue-600 hover:text-blue-800
+    }
     /* ... */
 }
