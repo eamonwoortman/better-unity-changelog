@@ -11,11 +11,18 @@ export interface Catalog {
     changelogs: CatalogEntry[]
 }
 
+export type ExtendedEntryType = {
+    title: string,
+    label: string
+}
+
+export type ChangelogEntryType = ExtendedEntryType | string
+
 /* changelog */ 
 export interface ChangelogNode {
     name?: string,
     children?: ChangelogNode[],
-    entries?: string[]
+    entries?: ChangelogEntryType[]
 }
 
 export interface ChangelogRoot {

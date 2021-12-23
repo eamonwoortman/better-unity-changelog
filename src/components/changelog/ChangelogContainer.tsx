@@ -1,7 +1,7 @@
 import { ExternalLinkIcon } from '@heroicons/react/solid';
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
-import { ChangelogNode, ChangelogRoot } from "../../features/changelogs/changelog.types";
+import { ChangelogNode, ChangelogRoot, ExtendedEntryType } from "../../features/changelogs/changelog.types";
 import { filtersSelector } from "../../features/filters/filters.slice";
 import Heading from "../generic/Heading";
 
@@ -10,6 +10,29 @@ type ContainerProps = {
     // filters...
     showSubCategories?: boolean;
 }; 
+
+const LabelColors = {
+  'Added': 'bg-green-700 text-green-100',
+  'Removed': 'bg-red-600 text-red-100',
+  'Updated': 'bg-yellow-500 text-yellow-100',
+  'Fixed': 'bg-blue-500 text-blue-100',
+  'Changed': 'bg-gray-100 text-gray-400'
+}
+
+function CreatePill(label: string) {
+  const color = (label in LabelColors) ? LabelColors[label] : 'bg-gray-200';
+  return `<a class='${color} py-1 px-2 rounded text-xs font-bold ml-1'>${label}</a>`
+} 
+
+function RenderChangelogEntry (entry: ExtendedEntryType | string) : string {
+  if (typeof entry === 'string') {
+    return entry;
+  }
+  const extendedEntry: ExtendedEntryType = entry;
+  const pill = CreatePill(entry.label)
+  return `${entry.title} ${pill}`
+}
+
 
 const ExtendedEntriesNode = function ({ node, depth }) {
   const HeadingStartSize:number = 2;
@@ -20,9 +43,7 @@ const ExtendedEntriesNode = function ({ node, depth }) {
       <ul className="list-disc list-inside m-2">
         {node.entries.map((entry, index) => {
           return (
-            <li key={index} className="py-2">
-            {entry}
-            </li>
+            <li key={index} className="py-2" dangerouslySetInnerHTML={{ __html: RenderChangelogEntry(entry)}}/>
           );
         })}
       </ul>
@@ -46,7 +67,7 @@ const SimpleEntriesNode = function ({ node, depth }) {
         {node.entries.map((entry, index) => {
           return (
             <li key={index} className="py-2">
-              {node.name}: {entry}
+              <div dangerouslySetInnerHTML={{ __html: `${node.name}: ${RenderChangelogEntry(entry)}` }}></div>
             </li>
           );
         })}
@@ -84,10 +105,6 @@ const RenderNode = ({node, depth = 0, showSubCategories}: { node: ChangelogNode,
   };
 
 
-  function copy(o) {
-    return Object.assign({}, o)
-  }
-  
 export default function ChangelogContainer({ root, showSubCategories = false }: ContainerProps) {
   const {category_filters} = useAppSelector(filtersSelector);
   const [filteredCategories, setFilteredCategories] = useState<ChangelogNode[]>(root.categories.children);
