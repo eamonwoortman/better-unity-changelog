@@ -2,7 +2,7 @@ import { ExternalLinkIcon } from '@heroicons/react/solid';
 import DOMPurify from 'dompurify';
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
-import { ChangelogNode, ChangelogRoot, ExtendedEntryType } from "../../features/changelogs/changelog.types";
+import { ChangelogNode, ChangelogRoot, ExtendedEntryType, ChangelogNodeType } from "../../features/changelogs/changelog.types";
 import { filtersSelector } from "../../features/filters/filters.slice";
 import Heading from "../generic/Heading";
 
@@ -55,13 +55,13 @@ const ExtendedEntriesNode = function ({ node, depth }) {
   </>)
 }
 
-const SimpleEntriesNode = function ({ node, depth }) {
+const SimpleEntriesNode = function ({ node, depth } : {node:ChangelogNode, depth:number}) {
   const HeadingStartSize:number = 2;
 
   return (
     <>
-      {(depth <= 1) && 
-        <Heading type={`h`+(HeadingStartSize + depth)} className={`dark:text-gray-300 text-gray-600 pt-15 ${depth == 0 && `font-semibold`}`}>{node.name}</Heading>  
+      {(node.type === 'MainCategory' || node.type === 'ChangeType') && 
+        <Heading type={`h`+(HeadingStartSize + 1)} className={`dark:text-gray-300 text-gray-600 pt-15 font-semibold`}>{node.name}</Heading>  
       }
       {node.entries && <>
         {node.entries.map((entry, index) => {
@@ -84,7 +84,7 @@ const RenderNode = ({node, depth = 0, showSubCategories}: { node: ChangelogNode,
       ) : (<SimpleEntriesNode {...{node, depth}}/>)
       }
       <ConditionalWrapper
-          condition={depth == 0}
+          condition={showSubCategories ? depth == 0 : (node.type == 'MainCategory' || node.type == 'ChangeType')}
           wrapper={children => 
             <ul className="list-disc list-outside m-5">{children}</ul>
           }>

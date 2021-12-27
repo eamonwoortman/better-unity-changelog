@@ -18,11 +18,17 @@ export type ExtendedEntryType = {
 
 export type ChangelogEntryType = ExtendedEntryType | string
 
+export type ChangelogNodeType =
+    'MainCategory' | // 'Known Issues', 'Changed in ...'
+    'ChangeType' | // Improvements, Changes, Fixes, ...
+    'ModificationType' // Added, Removed, ...
+
 /* changelog */ 
 export interface ChangelogNode {
     name?: string,
     children?: ChangelogNode[],
-    entries?: ChangelogEntryType[]
+    entries?: ChangelogEntryType[],
+    type?: ChangelogNodeType,
 }
 
 export interface ChangelogRoot {
