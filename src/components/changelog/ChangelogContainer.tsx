@@ -26,12 +26,12 @@ function CreateLabelBadge(label: string) {
   return `<span class='${color} text-xs font-semibold mr-2 px-2.5 py-0.5 rounded'>${label}</span>`
 } 
 
-function RenderChangelogEntry (entry: ExtendedEntryType | string) : string {
+function RenderChangelogEntry (node: ChangelogNode, depth: number, entry: ExtendedEntryType | string) : string {
   if (typeof entry === 'string') {
-    return entry;
+    return `(${depth}) ${entry}`;
   }
   const pill = CreateLabelBadge(entry.label)
-  return DOMPurify.sanitize(`${entry.title} ${pill}`)
+  return DOMPurify.sanitize(`(${depth}) ${entry.title} ${pill}`)
 }
 
 const ConditionalWrapper = ({ condition, wrapper, children }) => 
@@ -46,7 +46,7 @@ const ExtendedEntriesNode = function ({ node, depth }) {
       <ul className="list-disc list-inside m-2">
         {node.entries.map((entry, index) => {
           return (
-            <li key={index} className="py-2" dangerouslySetInnerHTML={{ __html: RenderChangelogEntry(entry)}}/>
+            <li key={index} className="py-2" dangerouslySetInnerHTML={{ __html: RenderChangelogEntry(node, depth, entry)}}/>
           );
         })}
       </ul>
@@ -60,14 +60,14 @@ const SimpleEntriesNode = function ({ node, depth }) {
 
   return (
     <>
-      {(depth == 0) && 
+      {(depth <= 1) && 
         <Heading type={`h`+(HeadingStartSize + depth)} className={`dark:text-gray-300 text-gray-600 pt-15 ${depth == 0 && `font-semibold`}`}>{node.name}</Heading>  
       }
       {node.entries && <>
         {node.entries.map((entry, index) => {
           return (
             <li key={index} className="py-2">
-              <div dangerouslySetInnerHTML={{ __html: `${node.name}: ${RenderChangelogEntry(entry)}` }}></div>
+              <div dangerouslySetInnerHTML={{ __html: `${node.name}: ${RenderChangelogEntry(node, depth, entry)}` }}/>
             </li>
           );
         })}
