@@ -18,7 +18,8 @@ const LabelColors = {
   'Fixed': 'bg-blue-100 text-blue-800 dark:bg-blue-200 dark:text-blue-800',
   'Changed': 'bg-purple-100 text-purple-800 dark:bg-purple-200 dark:text-purple-900',
   'Improved': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-200 dark:text-yellow-900',
-  'Deprecated': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-200 dark:text-yellow-900'
+  'Deprecated': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-200 dark:text-yellow-900',
+  'Bug': 'bg-red-100 text-red-800 dark:bg-red-200 dark:text-red-900'
 }
 
 function CreateLabelBadge(label: string) {
