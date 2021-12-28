@@ -128,7 +128,6 @@ export default function ChangelogContainer({ root }: ContainerProps) {
   }
 
   const applyFilters = () => {
-    console.log(category_filters);
     setFilteredCategories(filter(root.categories.children));    
   }
   

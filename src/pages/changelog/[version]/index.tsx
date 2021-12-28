@@ -28,7 +28,7 @@ const ChangelogPage: NextPage = () => {
       setChangelog(matchingChangelog);
   }, [changelogs]);
   
-  return (<div className="bg-white">
+  return (<>
     {/* Mobile filter dialog */}
     <MobileViewFilter mobileFiltersOpen={mobileFiltersOpen} setMobileFiltersOpen={setMobileFiltersOpen} filters={filters}/>
 
@@ -54,7 +54,7 @@ const ChangelogPage: NextPage = () => {
         </div>
       </section>
     </main>
-</div>)
+</>)
 }
 
 export default ChangelogPage

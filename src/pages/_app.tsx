@@ -7,6 +7,7 @@ import store from '../app/store'
 import Layout from '../components/layout'
 import { changelogSelector, fetchCatalog, fetchChangelogs } from '../features/changelogs/changelog.slice'
 import '../styles/globals.css'
+import { ThemeProvider } from 'next-themes'
 
 const AppWrapper = ({children}) => {
   const dispatch = useAppDispatch();
@@ -34,11 +35,13 @@ const AppWrapper = ({children}) => {
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
-      <Layout>
-        <AppWrapper>
-          <Component {...pageProps} />
-        </AppWrapper>
-      </Layout>
+      <ThemeProvider>
+        <Layout>
+          <AppWrapper>
+            <Component {...pageProps} />
+          </AppWrapper>
+        </Layout>
+      </ThemeProvider>
     </Provider>
   )
 }
