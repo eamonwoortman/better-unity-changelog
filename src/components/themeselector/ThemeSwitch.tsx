@@ -6,7 +6,7 @@ export const ThemeSwitch = () => {
 
     return (<>
         {/* ... */}
-        <button onClick={() => { console.log('test!'); setTheme(theme === 'light' ? 'dark' : 'light')}} className="h-6 w-6 relative z-10">
+        <button onClick={() => { setTheme(theme === 'light' ? 'dark' : 'light')}} className="h-6 w-6 relative z-10">
             {theme === 'light' ? <MoonIcon /> : <SunIcon />}
         </button>
         {/* ... */}
