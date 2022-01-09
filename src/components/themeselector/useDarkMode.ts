@@ -1,5 +1,5 @@
+import { useTheme } from 'next-themes'
 import React from "react"
-import {useTheme} from 'next-themes'
 
 export type DarkModeState = 'dark' | 'light'
 export type SetDarkModeState = React.Dispatch<React.SetStateAction<DarkModeState>>
@@ -9,6 +9,10 @@ export const useDarkMode = () => {
   const {theme, setTheme} = useTheme()
 
   React.useEffect(() => {
+    if (process.env.PREFER_THEME !== '') {
+      setTheme(process.env.PREFER_THEME);
+      return;
+    }
     if (typeof window === "undefined") {
       return;
     }
