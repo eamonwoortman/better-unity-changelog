@@ -2,7 +2,7 @@ import { ExternalLinkIcon } from '@heroicons/react/solid';
 import DOMPurify from 'dompurify';
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
-import { ChangelogNode, ChangelogRoot, ExtendedEntryType, ChangelogNodeType } from "../../features/changelogs/changelog.types";
+import { ChangelogNode, ChangelogRoot, ExtendedEntryType } from "../../features/changelogs/changelog.types";
 import { filtersSelector } from "../../features/filters/filters.slice";
 import Heading from "../generic/Heading";
 
@@ -67,9 +67,7 @@ const SimpleEntriesNode = function ({ node, depth } : {node:ChangelogNode, depth
       {node.entries && <>
         {node.entries.map((entry, index) => {
           return (
-            <li key={index} className="py-2">
-              <div dangerouslySetInnerHTML={{ __html: `${node.name}: ${RenderChangelogEntry(node, depth, entry)}` }}/>
-            </li>
+            <li key={index} className="py-2" dangerouslySetInnerHTML={{ __html: `${node.name}: ${RenderChangelogEntry(node, depth, entry)}` }}/>
           );
         })}
       </>}
