@@ -4,7 +4,7 @@ import { ThemeSwitch } from './themeselector/ThemeSwitch';
 
 
 export const Header: FunctionComponent = () => {
-    const showThemeSwitch: boolean = false;
+    const showThemeSwitch: boolean = true;
 
     return <header>
         <section className="relative w-full px-8 text-gray-700 bg-black body-font">
