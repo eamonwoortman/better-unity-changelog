@@ -9,12 +9,14 @@ export interface CategoryFilterOption {
 export interface FilterState {
     use_simple_view: boolean;
     category_filters: CategoryFilterOption[];
+    initial_categories: string[];
     search_text: string;
 }
 
 const initialState: FilterState = {
     use_simple_view: false,
     category_filters:  [],
+    initial_categories: [], 
     search_text: ""
 }
 
@@ -47,11 +49,15 @@ export const filtersSlice = createSlice({
     clear_search_text: (state) => {
       state.search_text = "";
     },
+
+    set_initial_categories: (state, action: PayloadAction<string[]>) => {
+        state.initial_categories = action.payload;
+    }
   },
 
 })
 
-export const { add_category_filter, remove_category_filter, set_search_text, clear_search_text, set_simple_view } = filtersSlice.actions
+export const { add_category_filter, remove_category_filter, set_search_text, clear_search_text, set_simple_view, set_initial_categories } = filtersSlice.actions
 
 export const selectSearchText = (state: AppState) => state.filters.search_text;
 export const selectCategoryFilters = (state: AppState) => state.filters.category_filters;

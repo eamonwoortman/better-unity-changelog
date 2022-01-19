@@ -24,7 +24,7 @@ const subCategories = [
 
 
 
-interface FilterCategoryOption {
+export interface FilterCategoryOption {
   value: string;
   label: string;
   checked: boolean;
@@ -38,43 +38,21 @@ export interface FilterCategory {
 
 
 
-export const defaultCategoryFilters = [
+export const defaultCategoryFilters = [  
   {
     id: 'category',
     name: 'Category',
     options: [
+      /* filled by the catalog */
+      /*
       { value: '2d', label: '2D', checked: false },
       { value: 'ai', label: 'AI', checked: false },
       { value: 'linux', label: 'Linux', checked: false },
       { value: 'opengl', label: 'OpenGL', checked: false },
       { value: 'shaders', label: 'Shaders', checked: false },
+      */
     ],
   },
-  /*
-  {
-    id: 'color',
-    name: 'Color',
-    options: [
-      { value: 'white', label: 'White', checked: false },
-      { value: 'beige', label: 'Beige', checked: false },
-      { value: 'blue', label: 'Blue', checked: false },
-      { value: 'brown', label: 'Brown', checked: false },
-      { value: 'green', label: 'Green', checked: false },
-      { value: 'purple', label: 'Purple', checked: false },
-    ],
-  },
-  {
-    id: 'size',
-    name: 'Size',
-    options: [
-      { value: '2l', label: '2L', checked: false },
-      { value: '6l', label: '6L', checked: false },
-      { value: '12l', label: '12L', checked: false },
-      { value: '18l', label: '18L', checked: false },
-      { value: '20l', label: '20L', checked: false },
-      { value: '40l', label: '40L', checked: false },
-    ],
-  },*/
 ]
 
 function classNames(...classes) {

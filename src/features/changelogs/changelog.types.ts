@@ -8,6 +8,8 @@ export interface CatalogEntry {
   
 export interface Catalog {
     date_modified: string,
+    category_types: string[],
+    change_types: string[],
     changelogs: CatalogEntry[]
 }
 

@@ -3,16 +3,18 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from '../../../app/hooks'
 import ChangelogContainer from '../../../components/changelog/ChangelogContainer'
-import { defaultCategoryFilters, FilterCategory, MobileViewFilter, MobileViewMenu, ViewFilterBar } from '../../../components/changelog/ViewFilterBar'
+import { defaultCategoryFilters, FilterCategory, FilterCategoryOption, MobileViewFilter, MobileViewMenu, ViewFilterBar } from '../../../components/changelog/ViewFilterBar'
 import { changelogSelector } from '../../../features/changelogs/changelog.slice'
 import { ChangelogRoot } from '../../../features/changelogs/changelog.types'
+import { filtersSelector } from '../../../features/filters/filters.slice'
 
 const ChangelogPage: NextPage = () => {
   const router = useRouter()
   const { version } = router.query
   const { changelogs } = useAppSelector(changelogSelector)
   const [ changelog, setChangelog ] = useState<ChangelogRoot>()
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+  const [ mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+  const { initial_categories } = useAppSelector(filtersSelector);
   const [ filters, setFilters ] = useState<FilterCategory[]>(defaultCategoryFilters)
 
   const getChangelog = (version: string) => {
@@ -20,10 +22,22 @@ const ChangelogPage: NextPage = () => {
     return match as ChangelogRoot;
   }
 
+  const transformCategoryString = (label: string): FilterCategoryOption => {
+    const value = label.toLowerCase().replace(' ', '_');
+    return { value, label, checked: false };
+  }
+
+  useEffect(() => {
+    console.log('setting intialfilters: '+ initial_categories.length, initial_categories);
+    const categoryFilter = filters.find(x => x.id == "category");
+    categoryFilter.options = initial_categories.map(category => transformCategoryString(category));
+  },[initial_categories]);
+
   useEffect(() => {
       if(!version) {
         return;
       }
+      console.log(initial_categories);
       const matchingChangelog = getChangelog(version as string);
       setChangelog(matchingChangelog);
   }, [changelogs]);
