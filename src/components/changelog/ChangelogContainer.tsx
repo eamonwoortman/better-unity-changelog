@@ -29,10 +29,10 @@ function CreateLabelBadge(label: string) {
 
 function RenderChangelogEntry (node: ChangelogNode, depth: number, entry: ExtendedEntryType | string) : string {
   if (typeof entry === 'string') {
-    return `(${depth}) ${entry}`;
+    return entry;
   }
   const pill = CreateLabelBadge(entry.label)
-  return DOMPurify.sanitize(`(${depth}) ${entry.title} ${pill}`)
+  return DOMPurify.sanitize(`${entry.title} ${pill}`)
 }
 
 const ConditionalWrapper = ({ condition, wrapper, children }) => 
