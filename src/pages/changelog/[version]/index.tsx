@@ -28,7 +28,6 @@ const ChangelogPage: NextPage = () => {
   }
 
   useEffect(() => {
-    console.log('setting intialfilters: '+ initial_categories.length, initial_categories);
     const categoryFilter = filters.find(x => x.id == "category");
     categoryFilter.options = initial_categories.map(category => transformCategoryString(category));
   },[initial_categories]);
@@ -37,7 +36,6 @@ const ChangelogPage: NextPage = () => {
       if(!version) {
         return;
       }
-      console.log(initial_categories);
       const matchingChangelog = getChangelog(version as string);
       setChangelog(matchingChangelog);
   }, [changelogs]);
