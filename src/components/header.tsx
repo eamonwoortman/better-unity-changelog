@@ -20,8 +20,8 @@ export const Header: FunctionComponent = () => {
                             </RouterLink>
                         </li>
                         <li className="mr-6">
-                            <RouterLink href="/counter">
-                                <a className="hover:text-blue-500" href="#">Counter</a>
+                            <RouterLink href="/search">
+                                <a className="hover:text-blue-500" href="#">Search</a>
                             </RouterLink>
                         </li>
                         {/*
