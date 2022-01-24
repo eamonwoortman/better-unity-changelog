@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import Searchbar from './header/searchbar';
 import RouterLink from './router/routerlink';
 import { ThemeSwitch } from './themeselector/ThemeSwitch';
 
@@ -34,6 +35,7 @@ export const Header: FunctionComponent = () => {
         */}
                     </ul>
                 </div>
+                <Searchbar/>
                 {showThemeSwitch && <ThemeSwitch />}
             </div>
         </section>
