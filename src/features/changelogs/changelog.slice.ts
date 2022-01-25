@@ -30,7 +30,7 @@ export const fetchChangelogs = createAsyncThunk('changelogs/fetchChangelogs',
     async (catalog:Catalog) => {
         try {
             return await changelogsTransformation(catalog)
-          } catch (error : Error) {
+          } catch (error : any) {
             // just rethrow for now
             throw error;
         }
@@ -52,7 +52,7 @@ export const fetchCatalog = createAsyncThunk<Catalog>('changelogs/fetchCatalog',
     async (_) => {
         try {
           return await getCatalog();
-        } catch (error : Error) {
+        } catch (error : any) {
             // just rethrow for now
             throw error;
         }
