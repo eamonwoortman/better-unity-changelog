@@ -24,7 +24,7 @@ function Searchbar() {
                 bg-black text-gray-400 focus:text-gray-300 
                 placeholder-gray-500
                 focus:shadow focus:outline-none
-                focus:shadow-gray-500" 
+                focus:border-blue-400 focus:border-opacity-75" 
                 placeholder="Search anything..."/>
             <button type="submit" className="absolute top-3 right-3"> 
                 <SearchIcon className="w-6 h-6"/>

@@ -7,11 +7,11 @@ function Search() {
 
   useEffect(() => {
     const term = router.query.term;
-    if (!term) return;
     setSearchTerm(term);
   });
 
-  return <div><p>Searching for: {searchTerm}</p>
+  return <div className="flex items-center justify-center">
+    { searchTerm && <div className="py-7">Searching afor: {searchTerm}</div> }
   </div>;
 }
 
