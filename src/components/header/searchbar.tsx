@@ -1,36 +1,60 @@
-import { SearchIcon } from '@heroicons/react/solid';
+import { SearchIcon, XIcon } from '@heroicons/react/solid';
 import { useRouter } from 'next/router';
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-function Searchbar() {
+function Searchbar({id}) {
     const router = useRouter();
+    const { term } = router.query
     const searchInputRef = useRef(null);
-    const search = (e) => {
+    const [isEmpty, setIsEmpty] = useState(true);
+    const [query, setQuery] = useState('');
+
+    const clearSearch = (e) => { 
         e.preventDefault();
-        const term = searchInputRef.current.value;
-        if (!term) return;
-        searchInputRef.current.blur();
-        router.push(`/search?term=${term}`);
-    }
+        setQuery('');
+        router.push(`/search`);
+    }    
+    
+    /* set query from initial url input */    
     useEffect(() => {
-        const term = router.query.term;
-        searchInputRef.current.value = term ? term : '';
-    });
-    return <div>
-    <form onSubmit={search} className="flex justify-center items-center px-4 sm:px-6 lg:px-8">
-        <div className="relative"> 
-            <input type="text" ref={searchInputRef} className="h-12 w-96 pr-8 pl-5 z-0
-                border rounded border-gray-700  
-                bg-black text-gray-400 focus:text-gray-300 
-                placeholder-gray-500
-                focus:shadow focus:outline-none
-                focus:border-blue-400 focus:border-opacity-75" 
-                placeholder="Search anything..."/>
-            <button type="submit" className="absolute top-3 right-3"> 
-                <SearchIcon className="w-6 h-6"/>
-             </button>
-        </div>
-    </form>
-  </div>
+      router.isReady && setQuery(term  as string || '');
+    }, [term])
+
+    /* update isEmpty on query change */
+    useEffect(() => {
+      setIsEmpty(!query);
+    }, [query])
+
+
+    const handleOnSubmit = (event) => {
+      event.preventDefault();
+      const term = query;
+      if (!term) return;
+      searchInputRef.current.blur();
+      router.push(`/search?term=${term}`);
+    };
+
+    /* update query on input change */
+    const handleOnInputChange = useCallback((event) => {
+        event.preventDefault();
+        setQuery(event.target.value || '');
+    }, [])
+  
+    return <div className="flex flex-grow justify-center">
+      <form onSubmit={handleOnSubmit} className="flex flex-grow px-6 py-2 border border-gray-700 focus-within:border-blue-400 focus-within:border-opacity-75 
+        rounded lg:max-w-3xl items-center">
+        <input onChange={handleOnInputChange} ref={searchInputRef} value={query} className="flex-grow w-full focus:outline-none
+        bg-black text-gray-400 focus:text-gray-300 
+        placeholder-gray-500" type="text" placeholder="Search anything..."/>
+          <XIcon className={`h-6 text-gray-500 cursor-pointer transition duration-100 transform hover:scale-125 ${isEmpty && "hidden"}`} onClick={clearSearch}/>
+          <hr className={`hidden border-0 bg-gray-500 text-gray-500 w-px h-5 ml-2 mr-2 ${!isEmpty && "sm:inline-flex"}`}/>
+          
+          <button type="submit">
+            <SearchIcon className="h-6 text-blue-800 hover:text-blue-600 hidden sm:inline-flex
+              transition duration-100 transform hover:scale-125"/>
+          </button>
+      </form>
+     </div>
   }
+
 export default Searchbar;

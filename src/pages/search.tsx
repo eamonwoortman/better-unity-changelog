@@ -11,7 +11,11 @@ function Search() {
   });
 
   return <div className="flex items-center justify-center">
-    { searchTerm && <div className="py-7">Searching afor: {searchTerm}</div> }
+    { searchTerm && <div className="py-7"><h4>Search results for: {searchTerm}</h4></div> }
+    { !searchTerm && <div className="py-7">
+        <h4>No results found</h4>
+        
+      </div> }
   </div>;
 }
 
