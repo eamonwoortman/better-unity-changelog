@@ -2,7 +2,7 @@ import { SearchIcon, XIcon } from '@heroicons/react/solid';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-function Searchbar({id}) {
+function Searchbar() {
     const router = useRouter();
     const { term } = router.query
     const searchInputRef = useRef(null);
