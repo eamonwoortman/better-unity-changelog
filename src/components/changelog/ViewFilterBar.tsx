@@ -87,7 +87,7 @@ export function ViewFilterBar ({filters}) {
   return (
     <div>
         {/* Filters */}
-        <form className="hidden lg:block p-10">
+        <form className="hidden lg:block">
 
             <Disclosure as="div" defaultOpen={true} key='view-options' className="border-b border-gray-200 py-6 select-none">
                 {({ open }) => (
@@ -127,7 +127,7 @@ export function ViewFilterBar ({filters}) {
               </ul>
             }
 
-            <h3 className="hidden lg:block text-cyan-600 pb-5 pt-0 m-0">Filters</h3>
+            <h3 className="hidden lg:block text-cyan-600 pb-5 pt-0 m-0" >Filters</h3>
             {filters.map((section) => (
             <Disclosure as="div" defaultOpen={true} key={section.id} className="border-b border-gray-200 py-6 select-none">
                 {({ open }) => (
@@ -144,7 +144,7 @@ export function ViewFilterBar ({filters}) {
                         </span>
                     </Disclosure.Button>
                     </h3>
-                    <Disclosure.Panel className="pt-6">
+                    <Disclosure.Panel className="pt-6 overflow-auto h-72">
                     <div className="space-y-4">
                         {section.options.map((option, optionIdx) => (
                         <div key={option.value} className="flex items-center">
@@ -159,7 +159,7 @@ export function ViewFilterBar ({filters}) {
                             />
                             <label
                             htmlFor={`filter-${section.id}-${optionIdx}`}
-                            className="ml-3 text-sm text-gray-600 select-none">
+                            className="ml-3 text-sm text-gray-600 select-none break-words">
                               {option.label}
                             </label>
                         </div>
