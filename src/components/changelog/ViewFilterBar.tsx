@@ -159,7 +159,7 @@ export function ViewFilterBar ({filters}) {
                             />
                             <label
                             htmlFor={`filter-${section.id}-${optionIdx}`}
-                            className="ml-3 text-sm text-gray-600 select-none break-words">
+                            className="ml-3 text-sm text-gray-600 select-none break-all">
                               {option.label}
                             </label>
                         </div>
