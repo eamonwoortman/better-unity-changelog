@@ -21,7 +21,7 @@ const ChangelogsPage: NextPage = () => {
           {(catalog) && ( 
             <article className="prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl 2xl:prose-2xl mx-auto">
               <h5>Unity Versions</h5>
-              <small className="prose-sm"><i>(last updated: {new Date(catalog.date_modified).toLocaleString()})</i></small>
+              <small className="prose-sm"><i>(last updated: {new Date(catalog.date_modified).toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' })})</i></small>
               <ul>
               {catalog.changelogs.map((changelog:CatalogEntry, index:number) => (
                   <li key={index}>
