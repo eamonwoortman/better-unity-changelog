@@ -1,12 +1,13 @@
-import http from './http-common';
+
+// const fs = require('fs');
 
 class ChangelogDataService {
   getCatalog() {
-    return http.get("/changelogs/catalog.json");
+    return require("/public/changelogs/catalog.json");
   }
 
   get(id:string) {
-    return http.get(`/changelogs/${id}`);
+    return require(`/public/changelogs/${id}`);
   }
 }
 

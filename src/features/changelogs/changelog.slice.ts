@@ -6,7 +6,8 @@ const changelogsTransformation = async (catalog: Catalog) => {
   const changelogRequestArray:any[] = []
   catalog.changelogs.forEach(changelog_entry => {
       const changelogFile = changelog_entry.file_name;
-      changelogRequestArray.push(ChangelogDataService.get(changelogFile).then(response => (response.data as ChangelogRoot)))
+      var result = ChangelogDataService.get(changelogFile) as ChangelogRoot;
+      changelogRequestArray.push(result)
   })
 
   try {
@@ -19,7 +20,7 @@ const changelogsTransformation = async (catalog: Catalog) => {
 async function getCatalog(): Promise<Catalog> {
   try {
     const res = await ChangelogDataService.getCatalog();
-    return res.data as Catalog;
+    return res as Catalog;
   } catch (error) {
     throw new Error(error);
   }
