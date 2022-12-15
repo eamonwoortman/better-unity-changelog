@@ -1,5 +1,5 @@
 import type { NextPage } from 'next'
-import ChangelogsPage from './changelog/ChangelogsPage'
+import ChangelogsPage from '../components/changelog/ChangelogsPage'
 import styles from '../styles/Home.module.css'
 
 const IndexPage: NextPage = () => {

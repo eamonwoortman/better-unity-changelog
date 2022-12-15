@@ -25,7 +25,7 @@ const ChangelogsPage: NextPage = () => {
               <ul>
               {catalog.changelogs.map((changelog:CatalogEntry, index:number) => (
                   <li key={index}>
-                    <Link href={"/changelog/" + changelog.slug}><a className="text-blue-500">{changelog.version} ({changelog.file_name})</a></Link>
+                    <Link href={"/changelog/" + changelog.slug}><div className="text-blue-500">{changelog.version} ({changelog.file_name})</div></Link>
                     
                   </li>
                 ))}
