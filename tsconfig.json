@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "src/pages/changelog/layout.tsx"  ],
   "exclude": [
     "node_modules"
   ]
