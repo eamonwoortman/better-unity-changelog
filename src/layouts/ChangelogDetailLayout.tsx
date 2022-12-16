@@ -1,11 +1,29 @@
-import { NextPage } from "next"
-import { ReactElement, useState } from "react"
-import { defaultCategoryFilters, FilterCategory, MobileViewFilter, MobileViewMenu, ViewFilterBar } from "../components/changelog/ViewFilterBar"
+import { useEffect, useState } from "react";
+import { useAppSelector } from "../app/hooks";
+import { defaultCategoryFilters, FilterCategory, FilterCategoryOption, MobileViewFilter, MobileViewMenu, ViewFilterBar } from "../components/changelog/ViewFilterBar";
+import { ChangelogRoot } from '../features/changelogs/changelog.types';
+import { filtersSelector } from '../features/filters/filters.slice';
 
-export default function ChangeLogDetailLayout({children}) {
+interface ChangelogDetailsProps { 
+  changelogs: ChangelogRoot[];
+}
+
+export default function ChangeLogDetailLayout(props: React.PropsWithChildren<ChangelogDetailsProps>) {
     const [ mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
     const [ filters, setFilters ] = useState<FilterCategory[]>(defaultCategoryFilters)
+    const { initial_categories } = useAppSelector(filtersSelector);
     
+    // Todo: move to util class
+    const transformCategoryString = (label: string): FilterCategoryOption => {
+      const value = label.toLowerCase().replace(' ', '_');
+      return { value, label, checked: false };
+    }
+
+    useEffect(() => {
+      const categoryFilter = filters.find(x => x.id == "category");
+      categoryFilter.options = initial_categories.map(category => transformCategoryString(category));
+    }, [initial_categories]);
+
     return (<>
         {/* Mobile filter dialog */}
         <MobileViewFilter mobileFiltersOpen={mobileFiltersOpen} setMobileFiltersOpen={setMobileFiltersOpen} filters={filters}/>
@@ -25,7 +43,7 @@ export default function ChangeLogDetailLayout({children}) {
     
               {/* Content grid */}
               <div className="lg:col-span-3">
-                  {children}
+                  {props.children}
               </div>
             </div>
           </section>
@@ -33,3 +51,4 @@ export default function ChangeLogDetailLayout({children}) {
     </>
     )
 }
+

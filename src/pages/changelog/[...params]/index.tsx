@@ -6,7 +6,7 @@ import ChangelogContainer from '../../../components/changelog/ChangelogContainer
 import { changelogSelector } from '../../../features/changelogs/changelog.slice'
 import { ChangelogRoot } from '../../../features/changelogs/changelog.types'
 import ChangeLogDetailLayout from '../../../layouts/ChangelogDetailLayout'
-import {Version, parseVersion} from '../../../utils/vparse'
+import { parseVersion, Version } from '../../../utils/vparse'
 
 const ChangelogPage: NextPage = () => {
   const router = useRouter()
@@ -21,36 +21,6 @@ const ChangelogPage: NextPage = () => {
     }
     return match as ChangelogRoot;
   }
-
-/*
-  type Version = {
-    major: number;
-    minor: number;
-    patch: number;
-    build: number;
-    isEmpty?: boolean;
-    parsed?: [number, number, number, number];
-    text?: string;
-  }
-
-  type VersionParseResult = {
-    version?: Version;
-    success: boolean;
-  };
-  
-  function parseVersion(input) {
-    var m = input.match(/\d*\.|\d+/g) || [];
-    let v:Version = {
-        major: +m[0] || 0,
-        minor: +m[1] || 0,
-        patch: +m[2] || 0,
-        build: +m[3] || 0
-    };
-    v.isEmpty = !v.major && !v.minor && !v.patch && !v.build;
-    v.parsed = [v.major, v.minor, v.patch, v.build];
-    v.text = v.parsed.join('.');
-    return v;
-}*/
 
   const getChangelogs = (fromQuery: string, toQuery: string) : ChangelogRoot[] => {
     const filteredChangelogs = [];
@@ -78,9 +48,9 @@ const ChangelogPage: NextPage = () => {
     return filteredChangelogs;
   }
 
-  useEffect(() => {
+  const updateView = () => {
     let changelogs = [];
-    console.log(params);
+    console.log(`params: ${params}`, params);
     if (params.length == 1) {
       const matchingChangelog = getChangelog(params[0]);
       changelogs.push(matchingChangelog);
@@ -88,22 +58,18 @@ const ChangelogPage: NextPage = () => {
       var [ from, to ] = params;
       console.log('from to filter! %s, %s', from, to);
       changelogs = getChangelogs(from, to)
-    }
-    /*
-    if (id !== undefined) {
-      console.log('id filter! %s', id);
-      const matchingChangelog = getChangelog(id as string);
-      changelogs.push(matchingChangelog);
-    } else if (from && to) {
-      console.log('from to filter! %s, %s', from, to);
     } else {
-      console.error('couldnt unpack query: %s', router.query, router.query);
-    }*/
+      console.log('invalid query');
+    }
     setSelectedChangelogs(changelogs);
+  }
+
+  useEffect(() => {
+    updateView();
   }, [changelogs]);
 
   return (<>
-    <ChangeLogDetailLayout>
+    <ChangeLogDetailLayout changelogs={selectedChangelogs}>
       {selectedChangelogs !== undefined && selectedChangelogs.map((changelog:ChangelogRoot, index:number) => (
         <ChangelogContainer key={index} root={changelog} />
         )
