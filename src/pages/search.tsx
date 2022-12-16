@@ -1,10 +1,12 @@
 import { XCircleIcon } from '@heroicons/react/outline';
+import axios from 'axios';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { ChangelogRoot } from '../../features/changelogs/changelog.types';
+import { ChangelogRoot } from '../features/changelogs/changelog.types';
 
-const fetcher = (...args) => fetch(...args).then(res => res.json());
+//const fetcher = (...args) => fetch([...args]).then(res => res.json());
+const fetcher = async (url) => await axios.get(url).then((res) => res.data);
 
 function useSearch (query) {
   const { data, error } = useSWR(`/api/search?query=${query}`, fetcher)
