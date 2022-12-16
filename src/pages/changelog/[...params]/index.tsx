@@ -12,7 +12,7 @@ const ChangelogPage: NextPage = () => {
   const router = useRouter()
   const params = (router.query.params as string[]) || []
   const { changelogs } = useAppSelector(changelogSelector)
-  const [selectedChangelogs, setSelectedChangelogs] = useState<ChangelogRoot[]>()
+  const [selectedChangelogs, setSelectedChangelogs] = useState<ChangelogRoot[]>([])
 
   const getChangelog = (version: string): ChangelogRoot => {
     const match = changelogs.find(x => x.slug == version);

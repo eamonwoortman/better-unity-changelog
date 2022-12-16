@@ -19,10 +19,23 @@ export default function ChangeLogDetailLayout(props: React.PropsWithChildren<Cha
       return { value, label, checked: false };
     }
 
-    useEffect(() => {
+    const setCategoryFilterOptions = (options: FilterCategoryOption[]) => {
       const categoryFilter = filters.find(x => x.id == "category");
-      categoryFilter.options = initial_categories.map(category => transformCategoryString(category));
+      categoryFilter.options = options;
+    }
+
+    useEffect(() => {
+      const initialCategoryOptions = initial_categories.map(category => transformCategoryString(category));
+      setCategoryFilterOptions(initialCategoryOptions);
     }, [initial_categories]);
+
+    
+    useEffect(() => {
+      const allChangelogCategories =  props.changelogs.map(changelog => changelog.category_types.map(category => transformCategoryString(category))).flat(1);
+      const filterOptions = allChangelogCategories.filter((category, index, self) => self.findIndex(other => other.value === category.value) === index); // [...new Set(allChangelogCategories)];
+      setCategoryFilterOptions(filterOptions);
+    }, [props.changelogs]);
+
 
     return (<>
         {/* Mobile filter dialog */}
