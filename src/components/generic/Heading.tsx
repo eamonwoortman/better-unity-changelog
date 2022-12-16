@@ -9,16 +9,12 @@ const elements = {
   h6: 'h6',
 };
 
-function Heading({ type, children, ...props }) {    
+const Heading = ({ type = 'h1', children, ...props }) => {    
   return React.createElement(
     elements[type] || elements.h1, 
     props, 
     children
   );
 }
-
-Heading.defaultProps = {
-  type: 'h1',
-};
 
 export default Heading;
