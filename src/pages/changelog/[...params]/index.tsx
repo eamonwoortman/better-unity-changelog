@@ -71,7 +71,7 @@ const ChangelogPage: NextPage = () => {
   return (<>
     <ChangeLogDetailLayout changelogs={selectedChangelogs}>
       {selectedChangelogs !== undefined && selectedChangelogs.map((changelog:ChangelogRoot, index:number) => (
-        <ChangelogContainer key={index} root={changelog} />
+        <ChangelogContainer key={index} root={changelog} id={index} />
         )
       )}
     </ChangeLogDetailLayout>

@@ -5,8 +5,10 @@ import { useAppSelector } from "../../app/hooks";
 import { ChangelogNode, ChangelogRoot, ExtendedEntryType } from "../../features/changelogs/changelog.types";
 import { filtersSelector } from "../../features/filters/filters.slice";
 import Heading from "../generic/Heading";
+import styles from '../styles/Changelog.module.css'
 
 type ContainerProps = {
+    id: number;
     root: ChangelogRoot;
 }; 
 
@@ -104,7 +106,7 @@ const RenderNode = ({node, depth = 0, showSubCategories}: { node: ChangelogNode,
   };
 
 
-export default function ChangelogContainer({ root }: ContainerProps) {
+export default function ChangelogContainer({ id, root }: ContainerProps) {
   const {category_filters, use_simple_view} = useAppSelector(filtersSelector);
   const [filteredCategories, setFilteredCategories] = useState<ChangelogNode[]>(root.categories.children);
   
@@ -134,7 +136,7 @@ export default function ChangelogContainer({ root }: ContainerProps) {
   }, [category_filters]);
 
     return(
-        <>
+        <div className={styles.changelog}>
           <div className="flex space-x-2">
             <h1 className="text-cyan-600">{root.version}</h1>
             <div className="flex items-center justify-center">
@@ -147,6 +149,6 @@ export default function ChangelogContainer({ root }: ContainerProps) {
           {!filteredCategories &&
             (<div>No categories found for {root.slug}</div>)
           }
-        </>
+        </div>
     )
 }
