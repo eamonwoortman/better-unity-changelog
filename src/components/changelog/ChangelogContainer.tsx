@@ -141,9 +141,12 @@ export default function ChangelogContainer({ root }: ContainerProps) {
               <a href={root.url} target="_blank"><ExternalLinkIcon className="h-5 w-5 text-cyan-600"/></a>
             </div>
           </div>
-          {filteredCategories.map((node, index) => (
+          {filteredCategories && filteredCategories.map((node, index) => (
             <RenderNode key={index} node={node} showSubCategories={!use_simple_view} />
           ))}
+          {!filteredCategories &&
+            (<div>No categories found for {root.slug}</div>)
+          }
         </>
     )
 }
