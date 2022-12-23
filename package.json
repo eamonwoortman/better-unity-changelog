@@ -13,6 +13,7 @@
         "@reduxjs/toolkit": "^1.7.2",
         "autoprefixer": "^10.4.2",
         "axios": "^0.26.0",
+        "axios-cache-adapter": "^2.7.3",
         "dompurify": "^2.3.6",
         "next": "latest",
         "next-themes": "^0.1.1",

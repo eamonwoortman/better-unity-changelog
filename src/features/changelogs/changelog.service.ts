@@ -1,14 +1,40 @@
+import axios from "axios";
+import { setupCache } from 'axios-cache-adapter';
+import https from 'https';
 
-// const fs = require('fs');
+const library_base_url = 'https://eamonwoortman.github.io/unity-changelog-scraper';
+const domain = 'eamonwoortman.github.io';
+const cache = setupCache({
+  maxAge: 5 * 60 * 1000 // Five minutes
+})
 
 class ChangelogDataService {
-  getCatalog() {
-    return require("/public/changelogs/catalog.json");
+  
+  api = axios.create({
+    baseURL: domain,
+    adapter: cache.adapter,
+    timeout: 60000, //optional
+    httpsAgent: new https.Agent({ keepAlive: true }),
+    headers: { 'Content-Type':'application/json'}
+  })
+  fetcher = async (url) => await this.api.get(url).then((res) => res.data);
+
+
+  async getCatalog() {
+    const now = Date.now();
+    const catalogUrl = `${library_base_url}/catalog.json?time=${now}`;
+    const { data } = await this.api.get(catalogUrl);
+    // Todo: use error
+    return data;
   }
 
-  get(id:string) {
-    return require(`/public/changelogs/${id}`);
+  async get(id:string) {
+    const changelogUrl = `${library_base_url}/${id}`;
+    const {data} = await this.api.get(changelogUrl);
+    // Todo: use error
+    return data;
   }
+
 }
 
 export default new ChangelogDataService();
