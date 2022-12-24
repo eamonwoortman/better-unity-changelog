@@ -33,7 +33,8 @@ export default function ChangeLogDetailLayout(props: React.PropsWithChildren<Cha
     
     useEffect(() => {
       const allChangelogCategories =  props.changelogs.map(changelog => changelog.category_types.map(category => transformCategoryString(category))).flat(1);
-      const filterOptions = allChangelogCategories.filter((category, index, self) => self.findIndex(other => other.value === category.value) === index); // [...new Set(allChangelogCategories)];
+      const uniqueOptions = [...new Set(allChangelogCategories)];
+      const filterOptions = uniqueOptions;
       setCategoryFilterOptions(filterOptions);
     }, [props.changelogs]);
 
