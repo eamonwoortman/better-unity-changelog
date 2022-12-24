@@ -22,6 +22,7 @@ export default function ChangeLogDetailLayout(props: React.PropsWithChildren<Cha
     const setCategoryFilterOptions = (options: FilterCategoryOption[]) => {
       const categoryFilter = filters.find(x => x.id == "category");
       categoryFilter.options = options;
+      setFilters(filters);
     }
 
     useEffect(() => {
