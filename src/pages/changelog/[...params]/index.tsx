@@ -39,10 +39,7 @@ const ChangelogPage: NextPage = () => {
       const compareTo = to.compare(version);
       if (compareFrom <= 0 && compareTo >= 0) {
         filteredChangelogs.push(changelog);
-      } else {
-        return;
-      }
-
+      } 
     });
 
     return filteredChangelogs;
@@ -50,16 +47,12 @@ const ChangelogPage: NextPage = () => {
 
   const updateView = () => {
     let changelogs = [];
-    console.log(`params: ${params}`, params);
     if (params.length == 1) {
       const matchingChangelog = getChangelog(params[0]);
       changelogs.push(matchingChangelog);
     } else if (params.length == 2) {
       var [ from, to ] = params;
-      console.log('from to filter! %s, %s', from, to);
       changelogs = getChangelogs(from, to)
-    } else {
-      console.log('invalid query');
     }
     setSelectedChangelogs(changelogs);
   }
