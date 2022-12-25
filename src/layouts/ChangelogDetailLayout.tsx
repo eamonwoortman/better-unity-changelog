@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-import { useAppSelector } from "../app/hooks";
 import { defaultCategoryFilters, FilterCategory, FilterCategoryOption, MobileViewFilter, MobileViewMenu, ViewFilterBar } from "../components/changelog/ViewFilterBar";
 import { ChangelogRoot } from '../features/changelogs/changelog.types';
-import { filtersSelector } from '../features/filters/filters.slice';
 
 interface ChangelogDetailsProps { 
   changelogs: ChangelogRoot[];
@@ -11,7 +9,6 @@ interface ChangelogDetailsProps {
 export default function ChangeLogDetailLayout(props: React.PropsWithChildren<ChangelogDetailsProps>) {
     const [ mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
     const [ filters, setFilters ] = useState<FilterCategory[]>(defaultCategoryFilters)
-    const { initial_categories } = useAppSelector(filtersSelector);
     
     // Todo: move to util class
     const transformCategoryString = (label: string): FilterCategoryOption => {
@@ -22,22 +19,15 @@ export default function ChangeLogDetailLayout(props: React.PropsWithChildren<Cha
     const setCategoryFilterOptions = (options: FilterCategoryOption[]) => {
       const categoryFilter = filters.find(x => x.id == "category");
       categoryFilter.options = options;
-      setFilters(filters);
+      setFilters([...filters]);
     }
 
     useEffect(() => {
-      const initialCategoryOptions = initial_categories.map(category => transformCategoryString(category));
-      setCategoryFilterOptions(initialCategoryOptions);
-    }, [initial_categories]);
-
-    
-    useEffect(() => {
       const allChangelogCategories =  props.changelogs.map(changelog => changelog.category_types.map(category => transformCategoryString(category))).flat(1);
-      const uniqueOptions = [...new Set(allChangelogCategories)];
+      const uniqueOptions = allChangelogCategories.filter((category, index, self) => self.findIndex(other => other.value === category.value) === index);
       const filterOptions = uniqueOptions;
       setCategoryFilterOptions(filterOptions);
     }, [props.changelogs]);
-
 
     return (<>
         {/* Mobile filter dialog */}

@@ -21,8 +21,6 @@ const subCategories = [
   { name: 'Laptop Sleeves', href: '#' },*/
 ]
 
-
-
 export interface FilterCategoryOption {
   value: string;
   label: string;
@@ -34,8 +32,6 @@ export interface FilterCategory {
   name: string;
   options: FilterCategoryOption[];
 }
-
-
 
 export const defaultCategoryFilters = [  
   {
@@ -61,15 +57,15 @@ function classNames(...classes) {
 export function ViewFilterBar ({filters}) {
   const dispatch = useAppDispatch();
   const { category_filters } = useAppSelector(filtersSelector);
-
+  
   const checkFilterOptions = () => {
     category_filters.map(filter => filters.map(filterCategory => filterCategory.options.map(filterOption => filterOption.checked = filterOption.value === filter.id)));
   }
 
   useEffect(() => {
     checkFilterOptions();
-  }, [category_filters]);
-
+  }, [filters]);
+  
   const handleViewModeChanged = (isChecked) => {
     dispatch(set_simple_view(isChecked));
   }
@@ -88,6 +84,7 @@ export function ViewFilterBar ({filters}) {
         {/* Filters */}
         <form className="hidden lg:block">
 
+            {/* Options */}
             <Disclosure as="div" defaultOpen={true} key='view-options' className="border-b border-gray-200 py-6 select-none">
                 {({ open }) => (
                 <>
@@ -133,7 +130,7 @@ export function ViewFilterBar ({filters}) {
                 <>
                     <h3 className="-my-3 flow-root">
                     <Disclosure.Button className="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
-                        <span className="font-medium text-gray-900">{section.name}</span>
+                        <span className="font-medium text-gray-900">{section.name} ({section.options.length})</span>
                         <span className="ml-6 flex items-center">
                         {open ? (
                             <MinusSmIcon className="h-5 w-5" aria-hidden="true" />
