@@ -1,19 +1,95 @@
 import type { NextApiHandler } from 'next';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import clientPromise from "../../lib/mongodb";
 
-const searchHandler: NextApiHandler = async (request, response) => {
-  function useGlobalItems() {
-    return useSelector((state) => state, shallowEqual);
+const searchHandler: NextApiHandler = async (req, res) => {
+  try {
+    const client = await clientPromise;
+    const searchQuery : string | string[] = req.query.version;
+    if (searchQuery) {
+      let results;
+      if (searchQuery.includes(",") || searchQuery.includes(" ")) {
+        results = await client
+          .db("changelog")
+          .collection("changelogs")
+          .aggregate([
+            {
+              $search: {
+                index: "autocompletev4",
+                autocomplete: {
+                  query: searchQuery,
+                  path: "version",
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                version: 1,
+                slug: 1,
+                released: {
+                  $dateFromString: {
+                    dateString: "$released",
+                  },
+                }
+              },
+            },
+            {
+              $sort: {
+                released: 1,
+              },
+            },
+            {
+              $limit: 10,
+            },
+          ])
+          .toArray();
+
+        return res.send(results);
+      }
+
+      let result = await client
+        .db("changelog")
+        .collection("changelogs")
+        .aggregate([
+          {
+            $search: {
+              index: "autocompletev4",
+              autocomplete: {
+                query: searchQuery,
+                path: "version_string",
+              },
+            },
+          },
+          {
+            $sort: {
+              index: 1,
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              version: 1,
+              slug: 1,
+              released: {
+                $dateFromString: {
+                  dateString: "$released",
+                },
+              },
+            },
+          },
+          {
+            $limit: 10,
+          },
+        ])
+        .toArray();
+
+      return res.send(result);
+    }
+    res.send([]);
+  } catch (error) {
+    console.error(error);
+    res.send([]);
   }
-  const dispatch = useDispatch();
-  const items = useGlobalItems();
-
-  console.log(items);
-  //const { data: user } = useSWR('/api/user')
-  //const { data: projects } = useSWR(() => '/api/projects?uid=' + user.id)
-  const { q, start = 0 } = request.query;
-  const results = []; //q ? changelogs.filter(changelog => changelog) : [];
-  response.json({ results })
 }
 
 export default searchHandler
