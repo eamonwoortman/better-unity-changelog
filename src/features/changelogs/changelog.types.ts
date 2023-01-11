@@ -1,15 +1,12 @@
 
 /* catalog  */ 
 export interface CatalogEntry {
-    version: string,
+    version_string: string,
     slug: string,
-    file_name: string
+    date: string
   }
   
 export interface Catalog {
-    date_modified: string,
-    category_types: string[],
-    change_types: string[],
     changelogs: CatalogEntry[]
 }
 

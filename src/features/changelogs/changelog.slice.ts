@@ -1,21 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import ChangelogDataService from './changelog.service';
-import { Catalog, ChangelogRoot, ChangelogState } from './changelog.types';
-
-const changelogsTransformation = async (catalog: Catalog) => {
-  const changelogRequestArray:any[] = []
-  catalog.changelogs.forEach(changelog_entry => {
-      const changelogFile = changelog_entry.file_name;
-      var result = ChangelogDataService.get(changelogFile) as Promise<ChangelogRoot>;
-      changelogRequestArray.push(result)
-  })
-
-  try {
-      return await Promise.all(changelogRequestArray)
-  } catch (error) {
-      throw new Error(error)
-  }
-}
+import { Catalog, ChangelogState } from './changelog.types';
 
 async function getCatalog(): Promise<Catalog> {
   try {
@@ -24,28 +9,6 @@ async function getCatalog(): Promise<Catalog> {
     throw new Error(error);
   }
 }
-
-/* fetchChangelogs */ 
-export const fetchChangelogs = createAsyncThunk('changelogs/fetchChangelogs',
-    async (catalog:Catalog) => {
-        try {
-            return await changelogsTransformation(catalog)
-          } catch (error : any) {
-            // just rethrow for now
-            throw error;
-        }
-    }
-)
-
-/* transforms catalog, adds slugs to each entry  */ 
-const catalogTransformation = (catalog: Catalog) => {
-  catalog.changelogs.forEach(changelog_entry => {
-    const slug = changelog_entry.file_name.replace('.json', '');
-    changelog_entry.slug = slug;
-  });
-  return catalog;
-}
-
 
 /* fetchCatalog */ 
 export const fetchCatalog = createAsyncThunk<Catalog>('changelogs/fetchCatalog',
@@ -84,22 +47,7 @@ const changelogSlice = createSlice({
       builder.addCase(fetchCatalog.rejected, (state, action) => {
         state.status = 'error'
         state.error = action.error
-      }),
-
-      /* fetchChangelogs */ 
-      builder.addCase(fetchChangelogs.pending, (state, action) => {
-          state.status = 'loading'
-        }),
-        builder.addCase(fetchChangelogs.fulfilled, (state, action) => {
-          action.payload.forEach(changelog => {
-            state.changelogs.push({ ...changelog })
-          })
-          state.status = 'success'
-        }),
-        builder.addCase(fetchChangelogs.rejected, (state, action) => {
-          state.status = 'error'
-          state.error = action.error
-        })
+      })
     },
 });
 

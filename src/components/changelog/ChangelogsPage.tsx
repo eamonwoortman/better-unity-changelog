@@ -15,8 +15,8 @@ const ChangelogsPage: NextPage = () => {
             <p><i>{error.message}</i></p>
           </div>}
            
-          {(!changelogs || !changelogs.length) && !error && (
-            <div>Loading data ...</div>
+          {!error && (!catalog) && (
+            <div>Loading data...</div>
           )}
           {(catalog) && ( 
             <article className="prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl 2xl:prose-2xl mx-auto">
@@ -25,7 +25,7 @@ const ChangelogsPage: NextPage = () => {
               <ul>
               {catalog.changelogs.map((changelog:CatalogEntry, index:number) => (
                   <li key={index}>
-                    <Link href={"/changelog/" + changelog.slug}><div className="text-blue-500">{changelog.version} ({changelog.file_name})</div></Link>
+                    <Link href={"/changelog/" + changelog.slug}><div className="text-blue-500">{changelog.version_string} ({changelog.date})</div></Link>
                     
                   </li>
                 ))}
