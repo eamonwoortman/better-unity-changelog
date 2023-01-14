@@ -6,7 +6,7 @@ import ChangelogContainer from '../../../components/changelog/ChangelogContainer
 import { changelogSelector } from '../../../features/changelogs/changelog.slice'
 import { ChangelogRoot } from '../../../features/changelogs/changelog.types'
 import ChangeLogDetailLayout from '../../../layouts/ChangelogDetailLayout'
-import { parseVersion, Version } from '../../../utils/vparse'
+import { Version } from '../../../utils/vparse'
 
 const ChangelogPage: NextPage = () => {
   const router = useRouter()
@@ -14,10 +14,19 @@ const ChangelogPage: NextPage = () => {
   const { changelogs } = useAppSelector(changelogSelector)
   const [selectedChangelogs, setSelectedChangelogs] = useState<ChangelogRoot[]>([])
 
-  const getChangelog = (version: string): ChangelogRoot => {
-    const match = changelogs.find(x => x.slug == version);
+  const changelogEndpoint = (query: string) => `/api/changelog/${query}`
+
+  const getChangelog = async (versionString: string) : Promise<ChangelogRoot> => {
+    const version:Version = Version.parseVersion(versionString);
+    if (version.isEmpty) {
+      console.log(`isempty: ${versionString}`);
+      return null;
+    }
+    const fetchUrl = changelogEndpoint(version.text);
+    const response = await fetch(fetchUrl);
+    const match = await response.json();
     if (!match) {
-      console.log('Failed to find changelog with version: %s', version);
+      console.log('Failed to find changelog with version: %s', versionString);
     }
     return match as ChangelogRoot;
   }
@@ -25,8 +34,8 @@ const ChangelogPage: NextPage = () => {
   const getChangelogs = (fromQuery: string, toQuery: string) : ChangelogRoot[] => {
     const filteredChangelogs = [];
 
-    const from:Version = parseVersion(fromQuery);
-    const to:Version = parseVersion(toQuery);
+    const from:Version = Version.parseVersion(fromQuery);
+    const to:Version = Version.parseVersion(toQuery);
     if (from.isEmpty || to.isEmpty) {
       console.log(`Could not parse 'from'(${fromQuery}) or 'to'(${toQuery}) queries`);
       return filteredChangelogs;
@@ -34,7 +43,7 @@ const ChangelogPage: NextPage = () => {
         
     // map through all changelogs, only allow from parsed from and to version
     changelogs.map((changelog:ChangelogRoot) => {
-      const version:Version = parseVersion(changelog.slug);
+      const version:Version = Version.parseVersion(changelog.slug);
       const compareFrom = from.compare(version);
       const compareTo = to.compare(version);
       if (compareFrom <= 0 && compareTo >= 0) {
@@ -45,21 +54,25 @@ const ChangelogPage: NextPage = () => {
     return filteredChangelogs;
   }
 
-  const updateView = () => {
+  const updateView = async () => {
     let changelogs = [];
-    if (params.length == 1) {
-      const matchingChangelog = getChangelog(params[0]);
-      changelogs.push(matchingChangelog);
+    if (params.length == 0) {
+      return;
+    } else if (params.length == 1) {
+      const matchingChangelog = await getChangelog(params[0]);
+      if (matchingChangelog) {
+        changelogs.push(matchingChangelog);
+      }
     } else if (params.length == 2) {
       var [ from, to ] = params;
       changelogs = getChangelogs(from, to)
-    }
+    } 
     setSelectedChangelogs(changelogs);
   }
 
   useEffect(() => {
-    updateView();
-  }, [changelogs]);
+    updateView().catch(console.error);
+  }, [router.query]);
 
   return (<>
     <ChangeLogDetailLayout changelogs={selectedChangelogs}>

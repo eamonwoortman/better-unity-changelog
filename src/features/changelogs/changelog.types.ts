@@ -31,7 +31,7 @@ export interface ChangelogNode {
 }
 
 export interface ChangelogRoot {
-    version: string,
+    version_string: string,
     slug: string,
     url: string,
     categories: ChangelogNode,

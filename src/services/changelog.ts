@@ -1,11 +1,46 @@
 import { Document, MongoClient } from "mongodb";
-import { CatalogEntry } from "../features/changelogs/changelog.types";
+import { CatalogEntry, ChangelogRoot } from "../features/changelogs/changelog.types";
 import clientPromise from "../lib/mongodb";
 
 //const mongoClient = setupMongoClient();
 
 class ChangelogService {
     client: MongoClient;
+
+    
+    async findVersion(versionSlug: string): Promise<ChangelogRoot> {
+        const client = await clientPromise;
+        let result = await client
+            .db("changelog")
+            .collection<ChangelogRoot>("changelogs")
+            .aggregate<ChangelogRoot>([
+                {
+                    $match : { 
+                        slug : versionSlug 
+                    } 
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        released: {
+                            $dateFromString: {
+                                dateString: "$released",
+                            },
+                        },
+                        version_string: 1,
+                        slug: 1,
+                        url: 1,
+                        category_types: 1,
+                        categories: 1,
+                    },
+                },
+                {
+                    $limit: 1,
+                }
+            ]).toArray();
+            
+        return result.length > 0 ? result[0] : null; 
+    }
 
     async findVersions(searchQuery: string | string[]): Promise<Document[]> {
         const client = await clientPromise;
@@ -30,7 +65,7 @@ class ChangelogService {
                 {
                     $project: {
                         _id: 0,
-                        version: 1,
+                        version_string: 1,
                         slug: 1,
                         released: {
                             $dateFromString: {
@@ -69,7 +104,7 @@ class ChangelogService {
                 {
                     $project: {
                         _id: 0,
-                        version: 1,
+                        version_string: 1,
                         slug: 1,
                         released: {
                             $dateFromString: {
