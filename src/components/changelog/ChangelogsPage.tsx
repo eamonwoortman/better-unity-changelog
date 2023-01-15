@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useAppSelector } from '../../app/hooks';
 import { changelogSelector } from '../../features/changelogs/changelog.slice';
 import { CatalogEntry } from '../../features/changelogs/changelog.types';
+import { dateStringToLocale } from '../../helpers/datehelper';
 import VersionSelector from '../selectors/VersionSelector';
 
 const ChangelogsPage: NextPage = () => {
@@ -22,11 +23,10 @@ const ChangelogsPage: NextPage = () => {
           {(catalog) && ( 
             <article className="prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl 2xl:prose-2xl mx-auto">
               <h5>Unity Versions</h5>
-              <small className="prose-sm"><i>(last updated: {new Date(catalog.date_modified).toLocaleString('nl-NL', { timeZone: 'Europe/Amsterdam' })})</i></small>
               <ul>
               {catalog.changelogs.map((changelog:CatalogEntry, index:number) => (
                   <li key={index}>
-                    <Link href={"/changelog/" + changelog.slug}><div className="text-blue-500">{changelog.version_string} ({changelog.date})</div></Link>
+                    <Link href={"/changelog/" + changelog.slug}><div className="text-blue-500">{changelog.version_string} ({dateStringToLocale(changelog.date)})</div></Link>
                     
                   </li>
                 ))}
