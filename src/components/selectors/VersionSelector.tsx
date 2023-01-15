@@ -65,7 +65,6 @@ export default function VersionSelector() {
       styles={styles}
       Item={Item}
       plugins={[]}
-      changed={OnSearchChanged}
       onSelect={OnItemSelected}
       // text='Iron M'
       />
