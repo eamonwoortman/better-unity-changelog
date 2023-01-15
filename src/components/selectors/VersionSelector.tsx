@@ -1,5 +1,11 @@
-import Turnstone from 'turnstone'
+import { useRouter } from 'next/router';
+import Turnstone from 'turnstone';
 
+type ChangelogStub = {
+    version_string: string,
+    slug: string,
+    released: string
+  };
 
 const styles = {
     input: 'w-full border py-2 px-4 text-lg outline-none rounded-md',
@@ -15,7 +21,7 @@ const styles = {
   }
 
   const listbox = {
-    displayField: 'characters',
+    displayField: 'versions',
     data: async (query) => {
       const res = await fetch(`/api/search/?version=${encodeURIComponent(query)}`)
       const data = await res.json()
@@ -28,12 +34,22 @@ const styles = {
   const Item = ({ item }) => {
     return (
       <div className='flex items-center cursor-pointer px-5 py-4'>
-        <p>{item.version_string}</p>
+         <p>{item.version_string}</p>
       </div>
     )
   }
   
+
 export default function VersionSelector() {
+    const router = useRouter();
+    const OnItemSelected = (item: ChangelogStub | undefined, displayField: string | number | undefined) => {
+        if (item === undefined) {
+            return;
+        }
+        console.log(item, displayField);
+        router.push(`/changelog/${item.slug}`);
+    }
+    
     return (
       <Turnstone id='version-selector'
       name='search'
@@ -49,6 +65,8 @@ export default function VersionSelector() {
       styles={styles}
       Item={Item}
       plugins={[]}
+      changed={OnSearchChanged}
+      onSelect={OnItemSelected}
       // text='Iron M'
       />
     )
