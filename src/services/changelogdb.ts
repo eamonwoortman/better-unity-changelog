@@ -2,12 +2,9 @@ import { Document, MongoClient } from "mongodb";
 import { CatalogEntry, ChangelogRoot } from "../features/changelogs/changelog.types";
 import clientPromise from "../lib/mongodb";
 
-//const mongoClient = setupMongoClient();
-
-class ChangelogService {
+class ChangelogDatabase {
     client: MongoClient;
-
-    
+   
     async findVersion(versionSlug: string): Promise<ChangelogRoot> {
         const client = await clientPromise;
         let result = await client
@@ -132,6 +129,6 @@ class ChangelogService {
     }
 }
 
-const serviceInstance = new ChangelogService();
-export { serviceInstance as ChangelogService };
+const serviceInstance = new ChangelogDatabase();
+export { serviceInstance as ChangelogDatabase };
 

@@ -1,9 +1,9 @@
 import type { NextApiHandler } from 'next';
-import { ChangelogService } from '../../../services/changelog';
+import { ChangelogDatabase } from '../../../services/changelogdb';
 
 const changelogHandler: NextApiHandler = async (request, response) => {
     try {
-        const changelogs = await ChangelogService.getAllVersions();
+        const changelogs = await ChangelogDatabase.getAllVersions();
         response.json(changelogs);
     } catch (e) {
         console.error(e);

@@ -1,5 +1,5 @@
 import type { NextApiHandler } from 'next';
-import { ChangelogService } from '../../../../services/changelog';
+import { ChangelogDatabase } from '../../../../services/changelogdb';
 import { Version } from '../../../../utils/vparse';
 
 const changelogHandler: NextApiHandler = async (request, response) => {
@@ -10,7 +10,7 @@ const changelogHandler: NextApiHandler = async (request, response) => {
             response.json({})
             return; 
         }
-        const result = await ChangelogService.findVersion(version.text);
+        const result = await ChangelogDatabase.findVersion(version.text);
         response.json(result);
     } catch (e) {
         console.error(e);
