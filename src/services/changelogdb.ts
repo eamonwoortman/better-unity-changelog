@@ -78,8 +78,33 @@ class ChangelogDatabase {
             .toArray();
         return result;
     }
-    async searchVersionAc(searchQuery: string | string[]): Promise<Document[]> {
+    async searchVersionAc(searchQuery: string | undefined): Promise<Document[]> {
         const client = await clientPromise;
+        if (!searchQuery) {
+            let results = await client
+            .db("changelog")
+            .collection("changelogs")
+            .aggregate([
+                {
+                    $sort: {
+                        index: -1,
+                    },
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        version_string: 1,
+                        slug: 1,
+                        released: {
+                            $dateFromString: {
+                                dateString: "$released",
+                            },
+                        },
+                    },
+                }
+            ]).toArray();
+            return results; 
+        }
         let result = await client
             .db("changelog")
             .collection("changelogs")
