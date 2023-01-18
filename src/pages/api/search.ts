@@ -1,19 +1,10 @@
 import type { NextApiHandler } from 'next';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { ChangelogDatabase } from '../../services/changelogdb';
 
-const searchHandler: NextApiHandler = async (request, response) => {
-  function useGlobalItems() {
-    return useSelector((state) => state, shallowEqual);
-  }
-  const dispatch = useDispatch();
-  const items = useGlobalItems();
-
-  console.log(items);
-  //const { data: user } = useSWR('/api/user')
-  //const { data: projects } = useSWR(() => '/api/projects?uid=' + user.id)
-  const { q, start = 0 } = request.query;
-  const results = []; //q ? changelogs.filter(changelog => changelog) : [];
-  response.json({ results })
+const searchHandler: NextApiHandler = async (req, res) => {
+    const searchQuery : string = req.query.version as string;
+    const result = await ChangelogDatabase.searchVersionAc(searchQuery);
+    return res.send(result);
 }
 
 export default searchHandler

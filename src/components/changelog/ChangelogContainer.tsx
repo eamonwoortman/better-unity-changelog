@@ -5,7 +5,7 @@ import { useAppSelector } from "../../app/hooks";
 import { ChangelogNode, ChangelogRoot, ExtendedEntryType } from "../../features/changelogs/changelog.types";
 import { filtersSelector } from "../../features/filters/filters.slice";
 import Heading from "../generic/Heading";
-import styles from '../styles/Changelog.module.css'
+import styles from '../styles/Changelog.module.css';
 
 type ContainerProps = {
     id: number;
@@ -138,7 +138,7 @@ export default function ChangelogContainer({ id, root }: ContainerProps) {
     return(
         <div className={styles.changelog}>
           <div className="flex space-x-2">
-            <h1 className="text-cyan-600">{root.version}</h1>
+            <h1 className="text-cyan-600">{root.version_string}</h1>
             <div className="flex items-center justify-center">
               <a href={root.url} target="_blank"><ExternalLinkIcon className="h-5 w-5 text-cyan-600"/></a>
             </div>

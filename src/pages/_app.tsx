@@ -1,4 +1,3 @@
-import { unwrapResult } from "@reduxjs/toolkit";
 import { ThemeProvider } from "next-themes";
 import type { AppProps } from "next/app";
 import { useEffect } from "react";
@@ -8,10 +7,8 @@ import { useStore } from "../app/store";
 import Layout from "../components/layout";
 import {
   changelogSelector,
-  fetchCatalog,
-  fetchChangelogs
+  fetchCatalog
 } from "../features/changelogs/changelog.slice";
-import { set_initial_categories } from "../features/filters/filters.slice";
 import "../styles/globals.css";
 
 const AppWrapper = ({ children }) => {
@@ -19,12 +16,8 @@ const AppWrapper = ({ children }) => {
   const { status } = useAppSelector(changelogSelector);
 
   const fetchEverything = async () => {
-    const resultAction = await dispatch(fetchCatalog());
-    if (fetchCatalog.fulfilled.match(resultAction)) {
-      const catalog = unwrapResult(resultAction);
-      dispatch(set_initial_categories(catalog.category_types));
-      dispatch(fetchChangelogs(catalog));
-    }
+    await dispatch(fetchCatalog());
+    // Todo: do we still need to fetch and set initial filter categories?
   };
 
   useEffect(() => {
