@@ -26,7 +26,7 @@ export default function VersionSelector() {
       defaultValue={''}
       getOptions={(query) => {
           return new Promise((resolve, reject) => {
-              fetch(`/api/search/?version=${encodeURIComponent(query)}`)
+              fetch(`/api/autocomplete/?version=${encodeURIComponent(query)}`)
                 .then((response) => response.json())
                 .then((changelogs) => {
                     resolve(
