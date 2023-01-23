@@ -65,13 +65,16 @@ class ChangelogDatabase {
                     $project: {
                         _id: 0,
                         version_string: 1,
-                        version_hash: 1,
                         slug: 1,
                         released: {
                             $dateFromString: {
                                 dateString: "$released",
                             },
                         },
+                        url: 1,
+                        category_types: 1,
+                        change_types: 1,
+                        categories: 1
                     },
                 }
             ]).toArray()
