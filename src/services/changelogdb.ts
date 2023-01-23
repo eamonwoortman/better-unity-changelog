@@ -1,6 +1,8 @@
 import { Document, MongoClient } from "mongodb";
 import { CatalogEntry, ChangelogRoot } from "../features/changelogs/changelog.types";
 import clientPromise from "../lib/mongodb";
+import { Version } from "../utils/vparse";
+
 
 class ChangelogDatabase {
     client: MongoClient;
@@ -39,20 +41,20 @@ class ChangelogDatabase {
         return result.length > 0 ? result[0] : null; 
     }
 
-    async findVersions(searchQuery: string | string[]): Promise<Document[]> {
+    async findVersions(from: Version, to: Version): Promise<Document[]> {
         const client = await clientPromise;
         let result = await client
             .db("changelog")
             .collection("changelogs")
             .aggregate([
                 {
-                    $search: {
-                        index: "version_autocomplete",
-                        autocomplete: {
-                            query: searchQuery,
-                            path: "version_string",
-                        },
-                    },
+                    $match: 
+                    { 
+                        version_hash: {
+                            $gte: from.createHash(),
+                            $lte: to.createHash()
+                        }
+                    }
                 },
                 {
                     $sort: {
@@ -63,6 +65,7 @@ class ChangelogDatabase {
                     $project: {
                         _id: 0,
                         version_string: 1,
+                        version_hash: 1,
                         slug: 1,
                         released: {
                             $dateFromString: {
@@ -70,12 +73,8 @@ class ChangelogDatabase {
                             },
                         },
                     },
-                },
-                {
-                    $limit: 10,
                 }
-            ])
-            .toArray();
+            ]).toArray()
         return result;
     }
     async searchVersionAc(searchQuery: string | undefined): Promise<Document[]> {

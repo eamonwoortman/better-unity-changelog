@@ -9,8 +9,8 @@ export class Version {
     isEmpty: boolean;
     parsed: Array<number>;
     text: string;
-    
-    constructor(major: number, minor: number, patch: number, prerelease: number | undefined) {
+    hash: number;
+    constructor(major: number, minor: number, patch: number, prerelease?: number | undefined) {
         this.major = major;
         this.minor = minor;
         this.patch = patch;
@@ -21,6 +21,7 @@ export class Version {
         if (this.build !== undefined) {
             this.text += `-${this.build}`
         }
+        this.hash = this.createHash();
     }
 
     static parseVersion(v: string): Version {
@@ -44,6 +45,10 @@ export class Version {
             }
         }
         return 0;
+    }
+
+    createHash(): number {
+        return (this.major * 100000000) + (this.minor * 1000000) + (this.patch * 10000) + (this.build + 1 || 0);
     }
 
 }
