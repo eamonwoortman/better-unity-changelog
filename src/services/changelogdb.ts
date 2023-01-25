@@ -1,29 +1,14 @@
 import { Document, MongoClient } from "mongodb";
-import { ApiError } from "next/dist/server/api-utils";
 import { CatalogEntry, ChangelogRoot } from "../features/changelogs/changelog.types";
+import clientPromise from "../lib/mongodb";
 import { Version } from "../utils/vparse";
 
-let clientPromise:Promise<MongoClient> = undefined;
-import("../lib/mongodb").then(module => { clientPromise = module.default;}).catch();
 
 class ChangelogDatabase {
     client: MongoClient;
-
-    async getClient() : Promise<MongoClient> {
-        if (clientPromise === undefined) {
-            const isMongoURIDefined = process.env.MONGODB_URI !== undefined;
-            if (isMongoURIDefined) {
-                throw new ApiError(500, 'Could not create MongoClient, invalid MONGODB_URI');
-            } else {
-                throw new ApiError(500, 'Could not create MongoClient, missing MONGODB_URI');
-            }
-        }
-        const client = await clientPromise;
-        return client;
-    }
-
+   
     async findVersion(versionSlug: string): Promise<ChangelogRoot> {
-        const client = await this.getClient();
+        const client = await clientPromise;
         let result = await client
             .db("changelog")
             .collection<ChangelogRoot>("changelogs")
@@ -57,7 +42,7 @@ class ChangelogDatabase {
     }
 
     async findVersions(from: Version, to: Version): Promise<Document[]> {
-        const client = await this.getClient();
+        const client = await clientPromise;
         let result = await client
             .db("changelog")
             .collection("changelogs")
@@ -96,7 +81,7 @@ class ChangelogDatabase {
         return result;
     }
     async searchVersionAc(searchQuery: string | undefined): Promise<Document[]> {
-        const client = await this.getClient();
+        const client = await clientPromise;
         if (!searchQuery) {
             let results = await client
             .db("changelog")
@@ -161,7 +146,7 @@ class ChangelogDatabase {
     }
 
     async getAllVersions(): Promise<CatalogEntry[]> {
-        const client = await this.getClient();
+        const client = await clientPromise;
         const changelogs = await client
             .db("changelog")
             .collection<CatalogEntry>("changelogs_view")
