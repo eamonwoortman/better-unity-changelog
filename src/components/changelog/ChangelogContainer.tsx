@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 import { ChangelogNode, ChangelogRoot, ExtendedEntryType } from "../../features/changelogs/changelog.types";
 import { filtersSelector } from "../../features/filters/filters.slice";
+import { slugify } from '../../utils/stringutils';
+import Anchor from '../generic/Anchor';
 import Heading from "../generic/Heading";
 import styles from '../styles/Changelog.module.css';
 
@@ -40,11 +42,23 @@ function RenderChangelogEntry (node: ChangelogNode, depth: number, entry: Extend
 const ConditionalWrapper = ({ condition, wrapper, children }) => 
   condition ? wrapper(children) : children ?? null;
 
-const ExtendedEntriesNode = function ({ node, depth }) {
-  const HeadingStartSize:number = 2;
+type EntriesNodeProps = {
+  node:ChangelogNode;
+  depth:number;
+  id: string; 
+}
 
+const ExtendedEntriesNode = function ({ node, depth, id } : EntriesNodeProps) {
+  const HeadingStartSize:number = 2;
+  const nameSlug:string = slugify(node.name);
+  const hrefId: string = `${id}_${nameSlug}`;
   return (<>
-    <Heading type={`h`+(HeadingStartSize + depth)} className={`dark:text-gray-300 text-gray-600 ${depth < 2 && `font-semibold`}`}>{node.name}</Heading>  
+    <div className='group/item flex items-center'>
+      <Heading type={`h`+(HeadingStartSize + depth)} id={hrefId} className={`dark:text-gray-300 text-gray-600 ${depth < 2 && `font-semibold`}`}>{node.name}</Heading> 
+      <a className="group/edit invisible group-hover/item:visible" href={`#${id}_${nameSlug}`}>
+        <Anchor className='hover:bg-sky-700'/> 
+      </a>
+    </div>
     {node.entries &&
       <ul className="list-disc list-inside m-2">
         {node.entries.map((entry, index) => {
@@ -58,13 +72,15 @@ const ExtendedEntriesNode = function ({ node, depth }) {
   </>)
 }
 
-const SimpleEntriesNode = function ({ node, depth } : {node:ChangelogNode, depth:number}) {
+const SimpleEntriesNode = function ({ node, depth, id } : EntriesNodeProps) {
   const HeadingStartSize:number = 2;
+  const nameSlug:string = slugify(node.name);
+  const hrefId: string = `${id}_${nameSlug}`;
 
   return (
     <>
       {(node.type === 'MainCategory' || node.type === 'ChangeType') && 
-        <Heading type={`h`+(HeadingStartSize + 1)} className={`dark:text-gray-300 text-gray-600 pt-15 font-semibold`}>{node.name}</Heading>  
+        <Heading type={`h`+(HeadingStartSize + 1)} id={hrefId} className={`dark:text-gray-300 text-gray-600 pt-15 font-semibold`}>{node.name}</Heading>  
       }
       {node.entries && <>
         {node.entries.map((entry, index) => {
@@ -77,12 +93,19 @@ const SimpleEntriesNode = function ({ node, depth } : {node:ChangelogNode, depth
   )
 }
 
-const RenderNode = ({node, depth = 0, showSubCategories}: { node: ChangelogNode, depth?:number, showSubCategories:boolean}) => {
+type RenderNodeProps = {
+  node: ChangelogNode;
+  depth?:number;
+  showSubCategories:boolean;
+  id: string;
+}
+
+const RenderNode = ({node, depth = 0, showSubCategories, id}: RenderNodeProps) => {
     return (
       <>
       {showSubCategories ? (
-        <ExtendedEntriesNode {...{node, depth}}/>
-      ) : (<SimpleEntriesNode {...{node, depth}}/>)
+        <ExtendedEntriesNode {...{node, depth, id}}/>
+      ) : (<SimpleEntriesNode {...{node, depth, id}}/>)
       }
       <ConditionalWrapper
           condition={showSubCategories ? depth == 0 : (node.type == 'MainCategory' || node.type == 'ChangeType')}
@@ -96,6 +119,7 @@ const RenderNode = ({node, depth = 0, showSubCategories}: { node: ChangelogNode,
                   node={nodeChild}
                   depth={depth + 1}
                   showSubCategories={showSubCategories}
+                  id={`${id}_${depth}`}
                 />
               );
           })}
@@ -138,13 +162,13 @@ export default function ChangelogContainer({ id, root }: ContainerProps) {
     return(
         <div className={styles.changelog}>
           <div className="flex space-x-2">
-            <h1 className="text-cyan-600">{root.version_string}</h1>
+            <h1 id={root.version_string} className="text-cyan-600">{root.version_string}</h1>
             <div className="flex items-center justify-center">
               <a href={root.url} target="_blank"><ExternalLinkIcon className="h-5 w-5 text-cyan-600"/></a>
             </div>
           </div>
           {filteredCategories && filteredCategories.map((node, index) => (
-            <RenderNode key={index} node={node} showSubCategories={!use_simple_view} />
+            <RenderNode key={index} node={node} showSubCategories={!use_simple_view} id={`${root.slug}_${index}`} />
           ))}
           {!filteredCategories &&
             (<div>No categories found for {root.slug}</div>)

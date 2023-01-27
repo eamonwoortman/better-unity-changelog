@@ -7,5 +7,10 @@ module.exports = {
     theme: {
         extend: {},
     },
-    plugins: [],
+    variants: {
+        extend: {
+            display: ["group-hover"],
+        },
+    },
+    plugins: [require('preline/plugin')],
 }
