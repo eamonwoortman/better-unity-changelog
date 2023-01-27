@@ -12,5 +12,5 @@ module.exports = {
             display: ["group-hover"],
         },
     },
-    plugins: [require('preline/plugin')],
+    plugins: [],
 }
