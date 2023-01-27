@@ -31,3 +31,6 @@
 
 @import "~react-select-search/style.css"; 
 
+html {
+    scroll-padding-top: 6rem;
+}
