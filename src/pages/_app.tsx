@@ -1,6 +1,7 @@
+import { NextPage } from "next";
 import { ThemeProvider } from "next-themes";
 import type { AppProps } from "next/app";
-import { useEffect } from "react";
+import { ReactElement, ReactNode, useEffect } from "react";
 import { Provider } from "react-redux";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { useStore } from "../app/store";
@@ -29,17 +30,27 @@ const AppWrapper = ({ children }) => {
   return <>{children}</>;
 };
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode
+}
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout
+}
+
+
+export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   //Normal initialisation Redux on client side
   const reduxStore = useStore(pageProps.initialReduxState);
+  // Use the layout defined at the page level, if available
+  const getLayout = Component.getLayout ?? ((page) => <Layout>{page}</Layout>)
+
   return (
     <Provider store={reduxStore}>
       <ThemeProvider>
-        <Layout>
-          <AppWrapper>
-            <Component {...pageProps} />
-          </AppWrapper>
-        </Layout>
+      <AppWrapper>
+        {getLayout(<Component {...pageProps} />)}
+      </AppWrapper>
       </ThemeProvider>
     </Provider>
   );
