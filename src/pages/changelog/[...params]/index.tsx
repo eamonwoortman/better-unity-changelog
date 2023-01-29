@@ -1,17 +1,16 @@
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import ChangelogContainer from '../../../components/changelog/ChangelogContainer'
 import { ChangelogRoot } from '../../../features/changelogs/changelog.types'
 import ChangeLogDetailLayout from '../../../layouts/ChangelogDetailLayout'
-import ChangelogsLayout from '../../../layouts/ChangelogsLayout'
+import ChangelogsLayout, { ChangelogsContext } from '../../../layouts/ChangelogsLayout'
 import { Version } from '../../../utils/vparse'
 import { NextPageWithLayout } from '../../_app'
 
 const ChangelogPage: NextPageWithLayout = () => {
   const router = useRouter()
   const params = (router.query.params as string[]) || []
-  const [selectedChangelogs, setSelectedChangelogs] = useState<ChangelogRoot[]>([])
-
+  const { changelogs, setChangelogs } = useContext(ChangelogsContext);
 
   const getChangelog = async (versionString: string) : Promise<ChangelogRoot> => {
     const changelogEndpoint = (query: string) => `/api/changelog/${query}`
@@ -60,7 +59,7 @@ const ChangelogPage: NextPageWithLayout = () => {
       var [ from, to ] = params;
       changelogs = await getChangelogs(from, to)
     } 
-    setSelectedChangelogs(changelogs);
+    setChangelogs(changelogs);
   }
 
   useEffect(() => {
@@ -68,8 +67,8 @@ const ChangelogPage: NextPageWithLayout = () => {
   }, [router.query]);
 
   return (<>
-    <ChangeLogDetailLayout changelogs={selectedChangelogs}>
-      {selectedChangelogs !== undefined && selectedChangelogs.map((changelog:ChangelogRoot, index:number) => (
+    <ChangeLogDetailLayout changelogs={changelogs}>
+      {changelogs !== undefined && changelogs.map((changelog:ChangelogRoot, index:number) => (
         <ChangelogContainer key={index} root={changelog} id={index} />
         )
       )}
