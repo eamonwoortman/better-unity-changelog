@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { defaultCategoryFilters, FilterCategory, FilterCategoryOption } from "../components/changelog/ViewFilterBar";
-import TableOfContents from "../components/TableOfContents";
 import { ChangelogRoot } from '../features/changelogs/changelog.types';
 
 interface ChangelogDetailsProps { 
@@ -32,8 +31,7 @@ export default function ChangeLogDetailLayout(props: React.PropsWithChildren<Cha
 
     return (<>
               
-    <TableOfContents/>
-
+   
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           <div className="relative z-10 flex items-baseline justify-between pt-5 pb-6 border-b border-gray-200">
@@ -50,6 +48,7 @@ export default function ChangeLogDetailLayout(props: React.PropsWithChildren<Cha
         </main>
     
     </>)
+    
     /*
     return (<>
         <MobileViewFilter mobileFiltersOpen={mobileFiltersOpen} setMobileFiltersOpen={setMobileFiltersOpen} filters={filters}/>

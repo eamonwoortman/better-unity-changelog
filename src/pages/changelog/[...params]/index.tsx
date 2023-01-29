@@ -1,12 +1,13 @@
-import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import ChangelogContainer from '../../../components/changelog/ChangelogContainer'
 import { ChangelogRoot } from '../../../features/changelogs/changelog.types'
 import ChangeLogDetailLayout from '../../../layouts/ChangelogDetailLayout'
+import ChangelogsLayout from '../../../layouts/ChangelogsLayout'
 import { Version } from '../../../utils/vparse'
+import { NextPageWithLayout } from '../../_app'
 
-const ChangelogPage: NextPage = () => {
+const ChangelogPage: NextPageWithLayout = () => {
   const router = useRouter()
   const params = (router.query.params as string[]) || []
   const [selectedChangelogs, setSelectedChangelogs] = useState<ChangelogRoot[]>([])
@@ -75,5 +76,7 @@ const ChangelogPage: NextPage = () => {
     </ChangeLogDetailLayout>
   </>)
 }
+
+ChangelogPage.getLayout = ChangelogsLayout;
 
 export default ChangelogPage
