@@ -28,7 +28,7 @@ const TableOfContents = ({page} : { page: ReactElement }) => {
     }, [page])
     
     return (
-        <nav aria-label="Table of contents" className="w-20">
+        <nav aria-label="Table of contents">
             <Headings headings={nestedHeadings} />
         </nav>
     );
