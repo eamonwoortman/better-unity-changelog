@@ -1,4 +1,4 @@
-import React, { createContext, Dispatch, ReactElement, SetStateAction, useEffect, useState } from "react";
+import React, { createContext, Dispatch, ReactElement, SetStateAction, useState } from "react";
 import { Footer } from "../components/footer";
 import { Header } from "../components/header";
 import TableOfContents from "../components/sidebar/TableOfContents";
@@ -10,7 +10,7 @@ type ContextType = {changelogs: ChangelogRoot[]; setChangelogs: Dispatch<SetStat
 
 export const ChangelogsContext = createContext<ContextType>(undefined);
 
-function useChangelogs() {
+export function useChangelogs() {
     const context = React.useContext(ChangelogsContext)
     if (context === undefined) {
       throw new Error('useCount must be used within a CountProvider')
@@ -29,11 +29,6 @@ function ChangelogsProvider({children}: {children: React.ReactNode}) {
   }
 
 export default function ChangelogsLayout(page: ReactElement) {
-
-    useEffect(() => {
-        console.log('RENDER');
-    }, [page])
-
     return (
         <ChangelogsProvider>
             <main className="flex flex-col h-screen">

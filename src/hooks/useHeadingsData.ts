@@ -1,10 +1,10 @@
-import { ReactElement, useContext, useEffect, useState } from "react";
-import { ChangelogsContext } from "../layouts/ChangelogsLayout";
+import { ReactElement, useEffect, useState } from "react";
+import { useChangelogs } from "../layouts/ChangelogsLayout";
 
 export default function useHeadingsData(pageRef: ReactElement) {
   const {
     changelogs
-  } = useContext(ChangelogsContext);
+  } = useChangelogs();
   const [nestedHeadings, setNestedHeadings] = useState([]);
 
   useEffect(() => {
@@ -15,9 +15,7 @@ export default function useHeadingsData(pageRef: ReactElement) {
     const headingElements = Array.from(
       document.querySelectorAll("h2, h3")
     );
-      
-    console.log('headings render', headingElements);
-    
+
     const newNestedHeadings = getNestedHeadings(headingElements);
     setNestedHeadings(newNestedHeadings);
   }
