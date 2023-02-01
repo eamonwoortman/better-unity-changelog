@@ -1,4 +1,4 @@
-import { ReactElement, useEffect } from "react";
+import { ReactElement } from "react";
 import useHeadingsData from "../../hooks/useHeadingsData";
 
 const Headings = ({ headings }) => (
@@ -19,8 +19,7 @@ const Headings = ({ headings }) => (
       ))}
     </ul>
   );
-}
-  
+
 const TableOfContents = ({page} : { page: ReactElement }) => {
     const { nestedHeadings } = useHeadingsData(page); 
     return (
