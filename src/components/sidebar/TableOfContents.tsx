@@ -19,14 +19,10 @@ const Headings = ({ headings }) => (
       ))}
     </ul>
   );
-
+}
   
 const TableOfContents = ({page} : { page: ReactElement }) => {
-    const { nestedHeadings } = useHeadingsData(page);
-    useEffect(() => {
-        console.log("TOC update");
-    }, [page])
-    
+    const { nestedHeadings } = useHeadingsData(page); 
     return (
         <nav aria-label="Table of contents">
             <Headings headings={nestedHeadings} />
