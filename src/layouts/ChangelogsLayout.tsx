@@ -39,7 +39,7 @@ export default function ChangelogsLayout(page: ReactElement) {
                         <TableOfContents page={page} />
                     </div>
                     <div className="flex flex-1 flex-col">
-                        <div className="flex flex-1 bg-blue-300 overflow-y-auto scroll-smooth paragraph px-4">
+                        <div className="flex flex-1 overflow-y-auto scroll-smooth paragraph px-4">
                             {page}
                         </div>
                     </div>
