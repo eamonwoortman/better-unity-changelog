@@ -1,13 +1,11 @@
 'use client';
 
-import { Provider, useStore } from 'react-redux';
+import { Provider } from 'react-redux';
+import store from '../helpers/store';
 
 export default function StoreProvider({ children }) {
-  // Normal initialisation Redux on client side
-  const reduxStore = useStore();
-
   return (
-    <Provider store={reduxStore}>
+    <Provider store={store}>
       {children}
     </Provider>
   );
