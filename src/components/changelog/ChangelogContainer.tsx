@@ -1,5 +1,5 @@
 import { ExternalLinkIcon } from '@heroicons/react/solid';
-import DOMPurify from 'dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 import { ChangelogNode, ChangelogRoot, ExtendedEntryType } from "../../features/changelogs/changelog.types";
