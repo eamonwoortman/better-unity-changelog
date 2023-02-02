@@ -7,12 +7,12 @@ import { Version } from "../utils/vparse";
 class ChangelogDatabase {
     client: MongoClient;
    
-    async findVersion(versionSlug: string): Promise<ChangelogRoot> {
+    async findVersion<T>(versionSlug: string): Promise<T> {
         const client = await clientPromise;
-        let result = await client
+        let response = await client
             .db("changelog")
-            .collection<ChangelogRoot>("changelogs")
-            .aggregate<ChangelogRoot>([
+            .collection("changelogs")
+            .aggregate([
                 {
                     $match : { 
                         slug : versionSlug 
@@ -37,13 +37,12 @@ class ChangelogDatabase {
                     $limit: 1,
                 }
             ]).toArray();
-            
-        return result.length > 0 ? result[0] : null; 
+        return (response.length > 0 ? response[0] : null) as T; 
     }
 
-    async findVersions(from: Version, to: Version): Promise<Document[]> {
+    async findVersions<T>(from: Version, to: Version): Promise<T[]> {
         const client = await clientPromise;
-        let result = await client
+        const response = await client
             .db("changelog")
             .collection("changelogs")
             .aggregate([
@@ -78,7 +77,7 @@ class ChangelogDatabase {
                     },
                 }
             ]).toArray()
-        return result;
+        return response as T[];
     }
     async searchVersionAc(searchQuery: string | undefined): Promise<Document[]> {
         const client = await clientPromise;
