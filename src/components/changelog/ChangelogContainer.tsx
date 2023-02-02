@@ -1,9 +1,9 @@
 import { ExternalLinkIcon } from '@heroicons/react/solid';
 import DOMPurify from 'isomorphic-dompurify';
 import { useEffect, useState } from "react";
-import { useAppSelector } from "../../app/hooks";
 import { ChangelogNode, ChangelogRoot, ExtendedEntryType } from "../../features/changelogs/changelog.types";
 import { filtersSelector } from "../../features/filters/filters.slice";
+import { useAppSelector } from "../../helpers/hooks";
 import { slugify } from '../../utils/stringutils';
 import Anchor from '../generic/Anchor';
 import Heading from "../generic/Heading";

@@ -3,13 +3,13 @@ import { ThemeProvider } from "next-themes";
 import type { AppProps } from "next/app";
 import { ReactElement, ReactNode, useEffect } from "react";
 import { Provider } from "react-redux";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { useStore } from "../app/store";
 import Layout from "../components/layout";
 import {
   changelogSelector,
   fetchCatalog
 } from "../features/changelogs/changelog.slice";
+import { useAppDispatch, useAppSelector } from "../helpers/hooks";
+import { useStore } from "../helpers/store";
 import "../styles/globals.css";
 
 const AppWrapper = ({ children }) => {

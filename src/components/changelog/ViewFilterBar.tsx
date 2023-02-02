@@ -2,8 +2,8 @@ import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/outline';
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon } from '@heroicons/react/solid';
 import { Fragment, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { add_category_filter, filtersSelector, remove_category_filter, set_simple_view } from '../../features/filters/filters.slice';
+import { useAppDispatch, useAppSelector } from '../../helpers/hooks';
 import Toggle from '../generic/Toggle';
 
 const sortOptions = [

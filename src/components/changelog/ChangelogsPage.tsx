@@ -1,9 +1,9 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
-import { useAppSelector } from '../../app/hooks';
 import { changelogSelector } from '../../features/changelogs/changelog.slice';
 import { CatalogEntry } from '../../features/changelogs/changelog.types';
 import { dateStringToLocale } from '../../helpers/datehelper';
+import { useAppSelector } from '../../helpers/hooks';
 import VersionSelector from '../selectors/VersionSelector';
 
 const ChangelogsPage: NextPage = () => {

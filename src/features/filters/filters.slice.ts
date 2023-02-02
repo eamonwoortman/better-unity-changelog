@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { AppState } from '../../app/store';
+import type { AppState } from '../../helpers/store';
 
 export interface CategoryFilterOption {
     id: string;
