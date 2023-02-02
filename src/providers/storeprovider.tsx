@@ -2,10 +2,10 @@
 
 import { Provider, useStore } from 'react-redux';
 
-// Normal initialisation Redux on client side
-const reduxStore = useStore();
-
 export default function StoreProvider({ children }) {
+  // Normal initialisation Redux on client side
+  const reduxStore = useStore();
+
   return (
     <Provider store={reduxStore}>
       {children}

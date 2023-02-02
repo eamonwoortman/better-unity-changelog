@@ -1,4 +1,4 @@
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider } from "../providers/themeprovider";
 import StoreProvider from "../providers/storeprovider";
 
 export default function RootLayout({
