@@ -1,11 +1,13 @@
 {
     "private": true,
     "scripts": {
-        "dev": "next",
+        "dev": "next dev",
         "build": "next build",
         "start": "next start",
         "type-check": "tsc",
-        "test": "jest"
+        "test": "jest",
+        "lint": "next lint src",
+        "lint.fix": "next lint --fix src"
     },
     "dependencies": {
         "@headlessui/react": "^1.7.7",
