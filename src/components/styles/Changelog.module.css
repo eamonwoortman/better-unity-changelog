@@ -1,6 +1,6 @@
 /*
-.changelog {
-    content-visibility: auto;
-    contain-intrinsic-size: 0 500px;
-}
-*/
+ *.changelog {
+ *    content-visibility: auto;
+ *    contain-intrinsic-size: 0 500px;
+ *}
+ */

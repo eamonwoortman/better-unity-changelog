@@ -1,8 +1,8 @@
-import { ReactElement } from "react";
-import useHeadingsData from "../../hooks/useHeadingsData";
+import { ReactElement } from 'react'
+import useHeadingsData from '../../hooks/useHeadingsData'
 
-const Headings = ({ headings }) => (
-    <ul>
+function Headings({ headings }) {
+  return (<ul>
       {headings.map((heading) => (
         <li key={heading.id}>
           <a href={`#${heading.id}`}>{heading.title}</a>
@@ -17,16 +17,17 @@ const Headings = ({ headings }) => (
           )}
         </li>
       ))}
-    </ul>
-  );
+    </ul>)
+}
 
-const TableOfContents = ({page} : { page: ReactElement }) => {
-    const { nestedHeadings } = useHeadingsData(page); 
-    return (
-        <nav aria-label="Table of contents">
-            <Headings headings={nestedHeadings} />
-        </nav>
-    );
-};
+function TableOfContents({ page } : { page: ReactElement }) {
+  const { nestedHeadings } = useHeadingsData(page)
 
-export default TableOfContents;
+  return (
+    <nav aria-label="Table of contents">
+      <Headings headings={nestedHeadings} />
+    </nav>
+  )
+}
+
+export default TableOfContents

@@ -1,14 +1,14 @@
-import { XCircleIcon } from '@heroicons/react/outline';
-import axios from 'axios';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import useSWR from 'swr';
-import { ChangelogRoot } from '../features/changelogs/changelog.types';
+import { XCircleIcon } from '@heroicons/react/outline'
+import axios from 'axios'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import useSWR from 'swr'
+import { ChangelogRoot } from '../components/changelog/changelog.types'
 
-//const fetcher = (...args) => fetch([...args]).then(res => res.json());
-const fetcher = async (url) => await axios.get(url).then((res) => res.data);
+// Const fetcher = (...args) => fetch([...args]).then(res => res.json());
+const fetcher = async (url) => await axios.get(url).then((res) => res.data)
 
-function useSearch (query) {
+function useSearch(query) {
   const { data, error } = useSWR(`/api/search?query=${query}`, fetcher)
 
   return {
@@ -19,27 +19,34 @@ function useSearch (query) {
 }
 
 function Search() {
-  const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState(null);
-  const [results, setResults] = useState<ChangelogRoot[]>([])
+  const router = useRouter()
+  const [
+    searchTerm,
+    setSearchTerm
+  ] = useState(null)
+  const [
+    results,
+    setResults
+  ] = useState<ChangelogRoot[]>([])
   const searchEndpoint = (query: string) => `/api/search?q=${query}`
 
   useEffect(() => {
-    const queryTerm:string  = router.query.term as string || '';
-    setSearchTerm(queryTerm);
+    const queryTerm:string = router.query.term as string || ''
+
+    setSearchTerm(queryTerm)
 
     if (queryTerm.length) {
-      //console.log('fetching: ', queryTerm);
-      fetch(searchEndpoint(queryTerm))
-        .then((res) => res.json())
-        .then((res) => {
-          //console.log('res: ', results);
+      // Console.log('fetching: ', queryTerm);
+      fetch(searchEndpoint(queryTerm)).
+        then((res) => res.json()).
+        then((res) => {
+          // Console.log('res: ', results);
           setResults(res.results)
         })
     } else {
       setResults([])
     }
-  });
+  })
 
   return <div className="flex flex-col items-center justify-center">
       <div className="flex flex-col">
@@ -61,4 +68,4 @@ function Search() {
   </div>;
 }
 
-export default Search;
+export default Search
