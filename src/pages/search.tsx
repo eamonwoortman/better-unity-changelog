@@ -46,7 +46,7 @@ function Search() {
     } else {
       setResults([])
     }
-  })
+  }, [router.query.term])
 
   return <div className="flex flex-col items-center justify-center">
       <div className="flex flex-col">
