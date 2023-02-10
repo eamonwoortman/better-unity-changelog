@@ -1,5 +1,5 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import type { AppState } from '../../helpers/store'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+//import type { AppState } from '../../helpers/store'
 
 export interface CategoryFilterOption {
     id: string;
@@ -59,8 +59,8 @@ export const filtersSlice = createSlice({
 
 export const { add_category_filter, remove_category_filter, set_search_text, clear_search_text, set_simple_view, set_initial_categories } = filtersSlice.actions
 
-export const selectSearchText = (state: AppState) => state.filters.search_text
-export const selectCategoryFilters = (state: AppState) => state.filters.category_filters
+//export const selectSearchText = (state: AppState) => state.filters.search_text
+//export const selectCategoryFilters = (state: AppState) => state.filters.category_filters
 
 export const filtersSelector = (state) => state.filters
 

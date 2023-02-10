@@ -2,9 +2,8 @@ import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon } from '@heroicons/react/solid'
 import { Fragment, useEffect } from 'react'
-import { add_category_filter, filtersSelector, remove_category_filter, set_simple_view } from '../../features/filters/filters.slice'
-import { useAppDispatch, useAppSelector } from '../../helpers/hooks'
-import Toggle from '../generic/Toggle'
+// import { useAppDispatch, useAppSelector } from 'hooks'
+import Toggle from 'ui/Toggle'
 
 const sortOptions = [
   { name: 'Most Popular',
@@ -69,9 +68,10 @@ function classNames(...classes) {
 }
 
 export function ViewFilterBar({ filters }) {
-  const dispatch = useAppDispatch()
-  const { category_filters } = useAppSelector(filtersSelector)
-
+  //const dispatch = useAppDispatch()
+  //const { category_filters } = useAppSelector(filtersSelector)
+  const category_filters = []
+  
   const checkFilterOptions = () => {
     category_filters.map((filter) => filters.map((filterCategory) => filterCategory.options.map((filterOption) => filterOption.checked = filterOption.value === filter.id)))
   }
@@ -82,7 +82,7 @@ export function ViewFilterBar({ filters }) {
   }, [filters])
 
   const handleViewModeChanged = (isChecked) => {
-    dispatch(set_simple_view(isChecked))
+    //dispatch(set_simple_view(isChecked))
   }
 
   const handleFilterChecked = (filterOption, isChecked) => {
@@ -90,9 +90,9 @@ export function ViewFilterBar({ filters }) {
       name: filterOption.label }
 
     if (isChecked) {
-      dispatch(add_category_filter(option))
+      //dispatch(add_category_filter(option))
     } else {
-      dispatch(remove_category_filter(option))
+      //dispatch(remove_category_filter(option))
     }
   }
 

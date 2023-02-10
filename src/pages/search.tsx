@@ -1,9 +1,9 @@
-import { XCircleIcon } from '@heroicons/react/outline'
-import axios from 'axios'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import useSWR from 'swr'
-import { ChangelogRoot } from '../components/changelog/changelog.types'
+import { XCircleIcon } from '@heroicons/react/outline';
+import axios from 'axios';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import useSWR from 'swr';
+import { ChangelogRoot } from '../components/changelog/changelog.types';
 
 // Const fetcher = (...args) => fetch([...args]).then(res => res.json());
 const fetcher = async (url) => await axios.get(url).then((res) => res.data)
@@ -19,7 +19,7 @@ function useSearch(query) {
 }
 
 function Search() {
-  const router = useRouter()
+  const searchParams = useSearchParams();
   const [
     searchTerm,
     setSearchTerm
@@ -31,7 +31,7 @@ function Search() {
   const searchEndpoint = (query: string) => `/api/search?q=${query}`
 
   useEffect(() => {
-    const queryTerm:string = router.query.term as string || ''
+    const queryTerm:string = searchParams.get('term') || ''
 
     setSearchTerm(queryTerm)
 
@@ -46,7 +46,7 @@ function Search() {
     } else {
       setResults([])
     }
-  }, [router.query.term])
+  }, [searchParams])
 
   return <div className="flex flex-col items-center justify-center">
       <div className="flex flex-col">
