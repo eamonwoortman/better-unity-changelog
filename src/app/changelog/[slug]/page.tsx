@@ -13,7 +13,7 @@ type ChangelogProps = {
 }
 
 export default async function Page(props: ChangelogProps) {
-  const changelogs = await getServerSideProps(props)
+  const changelogs = await getPageProps(props)
 
   return (<>
       <ChangeLogDetailLayout changelogs={changelogs}>
@@ -52,7 +52,7 @@ const getChangelogs = async (fromQuery: string, toQuery: string) : Promise<Chang
   return result as ChangelogRoot[]
 }
 
-export async function getServerSideProps(props: ChangelogProps): Promise<ChangelogsPageProps> {
+export async function getPageProps(props: ChangelogProps): Promise<ChangelogsPageProps> {
   const { params, searchParams } = props
 
   if (!params) {
