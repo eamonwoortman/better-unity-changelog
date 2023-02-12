@@ -15,7 +15,7 @@
         "axios": "^0.26.0",
         "axios-cache-adapter": "^2.7.3",
         "isomorphic-dompurify": "^0.26.0",
-        "mongodb": "^4.13.0",
+        "mongodb": "^5.0.1",
         "next": "^13.1.6",
         "next-themes": "^0.1.1",
         "postcss": "^8.4.6",
