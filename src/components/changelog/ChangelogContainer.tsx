@@ -195,7 +195,7 @@ export default function ChangelogContainer({ id, root }: ContainerProps) {
   return (
     <div className={styles.changelog}>
       <div className="flex space-x-2">
-        <h1 className="text-cyan-600" id={root.version_string}>{root.version_string}</h1>
+        <h1 className="text-cyan-600" id={root.slug}>{root.version_string}</h1>
         <div className="flex items-center justify-center">
           <a href={root.url} rel="noreferrer" target="_blank"><ExternalLinkIcon className="h-5 w-5 text-cyan-600" /></a>
         </div>
@@ -203,7 +203,7 @@ export default function ChangelogContainer({ id, root }: ContainerProps) {
       {filteredCategories
         ? filteredCategories.map((node, index) => <RenderNode
 key={index} node={node} showSubCategories={!use_simple_view}
-            id={`${root.slug}_${index}`}
+            id={`${root.slug}`}
           />)
         : null}
       {!filteredCategories &&
