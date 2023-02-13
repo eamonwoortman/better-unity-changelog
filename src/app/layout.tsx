@@ -1,18 +1,9 @@
-import { Footer } from '../components/footer'
-import { Header } from '../components/header'
-import Providers from '../providers/providers'
-import '../styles/globals.css'
+import { Footer } from '../components/footer';
+import { Header } from '../components/header';
+import Providers from '../providers/providers';
+import '../styles/globals.css';
 
-export default function RootLayout({
-
-  /*
-   * Layouts must accept a children prop.
-   * This will be populated with nested layouts or pages
-   */
-  children
-}: {
-    children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode; }) {
 
   return (
     <html lang="en">
