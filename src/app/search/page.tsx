@@ -1,29 +1,16 @@
+"use client";
+
 import { XCircleIcon } from '@heroicons/react/outline';
-import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import useSWR from 'swr';
-import { ChangelogRoot } from '../components/changelog/changelog.types';
+import { ChangelogRoot } from '../../components/changelog/changelog.types'
 
-// Const fetcher = (...args) => fetch([...args]).then(res => res.json());
-const fetcher = async (url) => await axios.get(url).then((res) => res.data)
-
-function useSearch(query) {
-  const { data, error } = useSWR(`/api/search?query=${query}`, fetcher)
-
-  return {
-    user: data,
-    isLoading: !error && !data,
-    isError: error
-  }
-}
-
-function Search() {
+export default function Page() {
   const searchParams = useSearchParams();
   const [
     searchTerm,
     setSearchTerm
-  ] = useState(null)
+  ] = useState('')
   const [
     results,
     setResults
@@ -48,7 +35,7 @@ function Search() {
     }
   }, [searchParams])
 
-  return <div className="flex flex-col items-center justify-center">
+  return (<div className="flex flex-col items-center justify-center">
       <div className="flex flex-col">
       <h3 className="text-yellow-600">Todo</h3>
       <ul>
@@ -63,9 +50,12 @@ function Search() {
     { !searchTerm && <div className="py-7">
         <h4>No results found</h4>
         
-      </div> }
+      </div> 
+    }
+    { results && results.length > 0 ? 
+      <div>TEST</div> 
+      : null 
+    }
 
-  </div>;
+  </div>);
 }
-
-export default Search
