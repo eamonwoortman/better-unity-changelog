@@ -1,5 +1,5 @@
 // Import { defaultCategoryFilters, FilterCategory, FilterCategoryOption } from "../components/changelog/ViewFilterBar";
-import { ChangelogRoot } from '../components/changelog/changelog.types'
+import { ChangelogRoot } from '../components/changelog/changelog.types';
 
 interface ChangelogDetailsProps {
   changelogs: ChangelogRoot[];

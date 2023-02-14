@@ -1,4 +1,3 @@
-import { Footer } from '../components/footer';
 import { Header } from '../components/header';
 import Providers from '../providers/providers';
 import '../styles/globals.css';
@@ -9,10 +8,9 @@ export default function RootLayout({ children }: { children: React.ReactNode; })
     <html lang="en">
       <body>
         <Providers>
-          <div className="flex flex-col min-h-screen">
+          <div className="flex flex-col h-screen">
             <Header />
-            <main className="flex-grow dark:bg-gray-800 dark:text-gray-200">{children}</main>
-            <Footer />
+            <main className="flex flex-1 overflow-y-auto scroll-smooth ">{children}</main>
           </div>
         </Providers>
       </body>

@@ -11,12 +11,12 @@ export default async function Page(props: ChangelogProps) {
 
   return (<>
             <div className="flex flex-1 overflow-hidden">
-                <div className="flex bg-gray-100 w-65 p-4">
-                <Suspense fallback={<p>Fast component loading...</p>}>
-                    <TableOfContents changelogs={changelogs} />
-                </Suspense>
+                <div className="w-60 relative left-0 top-0 h-screen bg-gray-100 p-10">
+                  <Suspense fallback={<p>Fast component loading...</p>}>
+                      <TableOfContents changelogs={changelogs} />
+                  </Suspense>
                 </div>
-                <div className="flex flex-1 flex-col">
+                <div className="flex flex-1 flex-col ml-6">
                     <div className="flex flex-1 overflow-y-auto scroll-smooth paragraph px-4">
                       <ChangeLogDetailLayout changelogs={changelogs}>
                         {changelogs !== undefined && changelogs.map((changelog:ChangelogRoot, index:number) => (
