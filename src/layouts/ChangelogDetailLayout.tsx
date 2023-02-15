@@ -41,11 +41,7 @@ export default function ChangeLogDetailLayout(props: React.PropsWithChildren<Cha
           </div>
     
           <section className="pt-6 pb-24">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
-              <div className="lg:col-span-3">
-                  {props.children}
-              </div>
-            </div>
+            {props.children}
           </section>
         </main>
     

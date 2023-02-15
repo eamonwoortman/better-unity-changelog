@@ -10,14 +10,18 @@ export default async function Page(props: ChangelogProps) {
   const changelogs = await getPageProps(props)
 
   return (<>
-            <div className="flex flex-1 overflow-hidden">
-                <div className="w-60 relative left-0 top-0 h-screen bg-gray-100 p-10">
-                  <Suspense fallback={<p>Fast component loading...</p>}>
-                      <TableOfContents changelogs={changelogs} />
-                  </Suspense>
+            <div>
+                <div className="hidden lg:block fixed z-20 inset-0 top-[5.8125rem] 
+                    left-[max(0px,calc(50%-45rem))] right-auto w-[19.5rem] 
+                    pb-10 px-8 overflow-y-auto">
+                  <nav id="nav" className="lg:text-sm lg:leading-6 relative">
+                    <Suspense fallback={<p>Fast component loading...</p>}>
+                          <TableOfContents changelogs={changelogs} />
+                    </Suspense>
+                  </nav>
                 </div>
-                <div className="flex flex-1 flex-col ml-6">
-                    <div className="flex flex-1 overflow-y-auto scroll-smooth paragraph px-4">
+                <div className="lg:pl-[19.5rem]">
+                    <div className="max-w-3xl mx-auto xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
                       <ChangeLogDetailLayout changelogs={changelogs}>
                         {changelogs !== undefined && changelogs.map((changelog:ChangelogRoot, index:number) => (
                           <ChangelogContainer key={index} root={changelog} id={index} />
