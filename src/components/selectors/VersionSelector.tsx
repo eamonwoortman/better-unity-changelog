@@ -23,7 +23,7 @@ export default function VersionSelector() {
     <SelectSearch
       defaultValue=""
       getOptions={(query) => new Promise((resolve, reject) => {
-        fetch(`/api/autocomplete/?version=${encodeURIComponent(query)}`).
+        fetch(`/api/version/?q=${encodeURIComponent(query)}`).
           then((response) => response.json()).
           then((changelogs) => {
             resolve(changelogs.map(({ slug, version_string }) => ({
