@@ -1,4 +1,2 @@
 
-export const dateStringToLocale = (dateString: string) => {
-    return new Date(dateString).toLocaleString()
-}
+export const dateStringToLocale = (dateString: string) => new Date(dateString).toLocaleString()

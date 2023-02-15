@@ -1,43 +1,59 @@
-import { ReactElement, useEffect, useState } from "react";
-import { useChangelogs } from "../layouts/ChangelogsLayout";
+import { ChangelogNode, ChangelogRoot } from 'components/changelog/changelog.types';
+import { slugify } from 'utils/stringutils';
 
-export default function useHeadingsData(pageRef: ReactElement) {
-  const {
-    changelogs
-  } = useChangelogs();
-  const [nestedHeadings, setNestedHeadings] = useState([]);
+export type NestedHeading = {
+  id: string;
+  title: string;
+  depth: number;
+  items: NestedHeading[];
+}
 
-  useEffect(() => {
-    refreshHeadings();
-  }, [changelogs]);
-
-  const refreshHeadings = () => {
-    const headingElements = Array.from(
-      document.querySelectorAll("h2, h3")
-    );
-
-    const newNestedHeadings = getNestedHeadings(headingElements);
-    setNestedHeadings(newNestedHeadings);
+export default function useHeadingsData ( changelogs : ChangelogRoot[] ) {
+  // This must match with whatever RenderNode is doing
+  const createHeading = (id:string, node: ChangelogNode, depth: number) => {
+    const nameSlug:string = slugify(node.name);
+    const heading: NestedHeading = {
+      id: `${id}_${nameSlug}`,
+      title: node.name,
+      depth: depth,
+      items: []
+    };
+    return heading;
   }
 
-  const getNestedHeadings = (headingElements) => {
-    const nestedHeadings = [];
-  
-    headingElements.forEach((heading, index) => {
-      const { innerText: title, id } = heading;
-  
-      if (heading.nodeName === "H2") {
-        nestedHeadings.push({ id, title, items: [] });
-      } else if (heading.nodeName === "H3" && nestedHeadings.length > 0) {
-        nestedHeadings[nestedHeadings.length - 1].items.push({
-          id,
-          title,
-        });
-      }
-    });
-  
-    return nestedHeadings;
+  const traverseCategories = (id: string, node: ChangelogNode, depth: number = 0) : NestedHeading => {
+    const heading = createHeading(id, node, depth);
+    if (node.children) {
+      node.children.forEach((childNode, child_index) => {
+        const childCategories = traverseCategories(`${id}_${depth}`, childNode, heading.depth + 1);
+        heading.items = [...heading.items, childCategories];
+      });
+    }
+    return heading;
   };
 
-  return { nestedHeadings };
-};
+  const createHeadings = (changelogs : ChangelogRoot[]) => {
+    let headings = [];
+    changelogs.forEach((root, index) => {
+      const heading: NestedHeading = {
+        id: `${root.slug}`,
+        title: root.version_string,
+        depth: 0,
+        items: []
+      };
+      
+      const mainCategory = root.categories;
+      if (mainCategory) {
+        mainCategory.children.forEach((childNode, child_index) => {
+          const childCategories = traverseCategories(heading.id, childNode, heading.depth);
+          heading.items = [...heading.items, childCategories];
+        });
+      }
+      headings.push(heading);
+    });
+    return headings;
+  }
+
+  const nestedHeadings = createHeadings(changelogs);
+  return { nestedHeadings }
+}

@@ -1,19 +1,37 @@
-import router from "next/router";
-import { FunctionComponent } from "react";
-import Searchbar from "./header/searchbar";
-import { ThemeSwitch } from "./themeselector/ThemeSwitch";
+import Image from 'next/image'
+import Link from 'next/link'
+import { FunctionComponent } from 'react'
+import unityIcon from '../../public/assets/unity-icon.png'
+import unityLogo from '../../public/assets/unity-logo.svg'
+import Searchbar from './header/searchbar'
+import { ThemeSwitch } from './themeselector/ThemeSwitch'
 
 export const Header: FunctionComponent = () => {
-  const showThemeSwitch: boolean = true;
+  const showThemeSwitch = true
+
   return (<header className="flex w-full bg-black">
       <div className="flex w-full p-6 items-center max-w-8xl mx-auto">
         <div className="cursor-pointer mr-2 hidden md:inline-flex">
-          <img src="/assets/unity-logo.svg" className="h-[32px] hidden lg:inline-flex" alt="logo" onClick={() => router.push('/')} />
-          <img src="/assets/unity-icon.png" className="h-[42px] hidden md:inline-flex lg:hidden" alt="logo" onClick={() => router.push('/')} />
+          <Link href='/'>
+            <Image
+              src={unityLogo}
+              alt="logo"
+              width={87}
+              height={32}
+              className="hidden lg:inline-flex"
+            />
+            <Image
+              src={unityIcon}
+              alt="logo"
+              width={42}
+              height={42}
+              className="hidden md:inline-flex lg:hidden"
+            />
+          </Link>
         </div>
         <Searchbar />
         {showThemeSwitch && <ThemeSwitch />}
       </div>
-    </header>
-  );
-};
+    </header>)
+  ;
+}
