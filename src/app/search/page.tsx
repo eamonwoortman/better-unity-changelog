@@ -1,39 +1,18 @@
-"use client";
-
 import { XCircleIcon } from '@heroicons/react/outline';
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { ChangelogRoot } from '../../components/changelog/changelog.types'
+import searchChangelog from '../../lib/search';
 
-export default function Page() {
-  const searchParams = useSearchParams();
-  const [
-    searchTerm,
-    setSearchTerm
-  ] = useState('')
-  const [
-    results,
-    setResults
-  ] = useState<ChangelogRoot[]>([])
-  const searchEndpoint = (query: string) => `/api/search?q=${query}`
+type Props = {
+  params?: {
+    num?: string;
+  };
+  searchParams?: {
+    term?: string;
+  };
+};
 
-  useEffect(() => {
-    const queryTerm:string = searchParams.get('term') || ''
-
-    setSearchTerm(queryTerm)
-
-    if (queryTerm.length) {
-      // Console.log('fetching: ', queryTerm);
-      fetch(searchEndpoint(queryTerm)).
-        then((res) => res.json()).
-        then((res) => {
-          // Console.log('res: ', results);
-          setResults(res.results)
-        })
-    } else {
-      setResults([])
-    }
-  }, [searchParams])
+export default async function Page(props: Props) {
+  const searchTerm = props.searchParams.term;
+  const results = await searchChangelog(searchTerm);
 
   return (<div className="flex flex-col items-center justify-center">
       <div className="flex flex-col">
