@@ -8,7 +8,7 @@ export type NestedHeading = {
   items: NestedHeading[];
 }
 
-export default function useHeadingsData ( changelogs : ChangelogRoot[] ) {
+export default function useHeadingsData ( changelogs : ChangelogRoot[] ) : NestedHeading[] {
   // This must match with whatever RenderNode is doing
   const createHeading = (id:string, node: ChangelogNode, depth: number) => {
     const nameSlug:string = slugify(node.name);
@@ -32,7 +32,7 @@ export default function useHeadingsData ( changelogs : ChangelogRoot[] ) {
     return heading;
   };
 
-  const createHeadings = (changelogs : ChangelogRoot[]) => {
+  const createHeadings = (changelogs : ChangelogRoot[]): NestedHeading[] => {
     let headings = [];
     changelogs.forEach((root, index) => {
       const heading: NestedHeading = {
@@ -53,7 +53,5 @@ export default function useHeadingsData ( changelogs : ChangelogRoot[] ) {
     });
     return headings;
   }
-
-  const nestedHeadings = createHeadings(changelogs);
-  return { nestedHeadings }
+  return createHeadings(changelogs);
 }
