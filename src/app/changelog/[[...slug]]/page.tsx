@@ -1,6 +1,7 @@
 
 import { ChangelogRoot } from 'components/changelog/changelog.types';
 import ChangelogContainer from 'components/changelog/ChangelogContainer';
+import ScrollToTop from 'components/scrolltotop';
 import TableOfContents from 'components/sidebar/TableOfContents';
 import ChangeLogDetailLayout from 'layouts/ChangelogDetailLayout';
 import { ChangelogProps, getPageProps } from 'lib/changelog';
@@ -31,6 +32,7 @@ export default async function Page(props: ChangelogProps) {
                     </div>
                 </div>
             </div>
+            <ScrollToTop/>
     </>)
   ;
 }
