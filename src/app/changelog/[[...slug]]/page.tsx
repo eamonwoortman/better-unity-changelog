@@ -14,7 +14,8 @@ export default async function Page(props: ChangelogProps) {
             <div>
                 <div className="hidden lg:block fixed z-20 inset-0 top-[5.8125rem] 
                     left-[0.5rem] right-auto w-[16.5rem] 
-                    pb-10 px-4 pt-2 overflow-y-auto overscroll-none">
+                    pb-10 px-4 pt-2 overflow-y-auto overscroll-none
+                    scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-slate-100 scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
                   <nav id="nav" className="lg:text-sm lg:leading-6 relative">
                     <Suspense fallback={<p>Fast component loading...</p>}>
                           <TableOfContents changelogs={changelogs} />

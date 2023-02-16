@@ -13,6 +13,7 @@ module.exports = {
         extend: {
             display: ["group-hover"],
         },
+        scrollbar: ['rounded']
     },
-    plugins: [],
+    plugins: [require('tailwind-scrollbar')],
 }
