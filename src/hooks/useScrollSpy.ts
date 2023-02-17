@@ -5,9 +5,8 @@ export function useScrollSpy(
     ids,
     options
   ) {
-    console.log(`useScrollSppy: `, ids);
-    const [activeId, setActiveId] = React.useState();
-    const observer = React.useRef();
+    const [activeId, setActiveId] = React.useState('');
+    const observer = React.useRef<IntersectionObserver | null>(null);
     React.useEffect(() => {
       const elements = ids.map((id) =>
         document.getElementById(id)
@@ -16,7 +15,6 @@ export function useScrollSpy(
       observer.current = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry?.isIntersecting) {
-            console.log(`Intersecting: `, entry);
             setActiveId(entry.target.id);
           } else {
             console.log('.');
