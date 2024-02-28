@@ -2,15 +2,13 @@ import { ChangelogRoot } from 'components/changelog/changelog.types';
 import { ChangelogDatabase } from 'services/changelogdb';
 import { Version } from 'utils/vparse';
 
-
 export type ChangelogsPageProps = ChangelogRoot[];
 
 export type ChangelogProps = {
     params: { slug: string };
     searchParams?: { [key: string]: string | string[] | undefined };
-  }
+}
   
-
 export type LayoutPageProps = {
     params?: ChangelogProps;
     children?: React.ReactNode;
