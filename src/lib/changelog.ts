@@ -54,12 +54,11 @@ const getChangelog = async (versionString: string) : Promise<ChangelogRoot> => {
       if (matchingChangelog) {
         changelogs.push(matchingChangelog)
       }
-    } else if (searchParams != undefined) {
-  
-      /*
-       * Var [ from, to ] = searchParams;
-       * changelogs = await getChangelogs(from, to)
-       */
+    } else if (searchParams !== undefined) {
+      const from = searchParams.from as string;
+      const to = searchParams.to as string;
+      const matchingChangelogs = await getChangelogs(from, to)
+      changelogs.push(...matchingChangelogs);
     }
   
     return changelogs
