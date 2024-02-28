@@ -6,6 +6,9 @@ import ChangeLogDetailLayout from 'layouts/ChangelogDetailLayout';
 import { ChangelogsProps, getPagePropsMultiple } from 'lib/changelog';
 import { Suspense } from 'react';
 
+// Work-around for getting "dynamic" searchParams on deployments
+export const dynamic = "force-dynamic";
+
 export default async function Page(props: ChangelogsProps) {
   const changelogs = await getPagePropsMultiple(props)
 
