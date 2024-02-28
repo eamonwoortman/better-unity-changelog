@@ -57,6 +57,7 @@ const getChangelog = async (versionString: string) : Promise<ChangelogRoot> => {
     } else if (searchParams !== undefined) {
       const from = searchParams.from as string;
       const to = searchParams.to as string;
+      console.log(`params, searchParams: `, params, searchParams)
       const matchingChangelogs = await getChangelogs(from, to)
       changelogs.push(...matchingChangelogs);
     }
