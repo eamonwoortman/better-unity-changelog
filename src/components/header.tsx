@@ -5,6 +5,7 @@ import unityIcon from '../../public/assets/unity-icon.png'
 import unityLogo from '../../public/assets/unity-logo.svg'
 import Searchbar from './header/searchbar'
 import { ThemeSwitch } from './themeselector/ThemeSwitch'
+import { Suspense } from 'react'
 
 export const Header: FunctionComponent = () => {
   const showThemeSwitch = true
@@ -29,7 +30,9 @@ export const Header: FunctionComponent = () => {
             />
           </Link>
         </div>
-        <Searchbar />
+        <Suspense>
+          <Searchbar />
+        </Suspense>
         {showThemeSwitch && <ThemeSwitch />}
       </div>
     </header>)

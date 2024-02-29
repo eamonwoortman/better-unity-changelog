@@ -6,8 +6,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 function Searchbar() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const term = searchParams.get('term')
-  const searchInputRef = useRef(null)
+  const searchInputRef = useRef<HTMLInputElement>(null)
   const [
     isEmpty,
     setIsEmpty
@@ -25,8 +24,9 @@ function Searchbar() {
 
   /* Set query from initial url input */
   useEffect(() => {
+    const term = searchParams?.get('term')
     setQuery(term as string || '')
-  }, [term])
+  }, [searchParams])
 
   /* Update isEmpty on query change */
   useEffect(() => {
@@ -41,7 +41,7 @@ function Searchbar() {
     if (!term) {
       return
     }
-    searchInputRef.current.blur()
+    searchInputRef.current?.blur()
     router.push(`/search?term=${term}`)
   }
 

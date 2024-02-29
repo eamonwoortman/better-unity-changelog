@@ -63,7 +63,8 @@ export function ViewFilterBar({ filters }) {
   const { replace } = useRouter();
   
   const getCategoryFilters = () : string[] => {
-    const params = new URLSearchParams(searchParams);
+    if (!searchParams) return [];
+    const params = new URLSearchParams(searchParams.toString());
     const paramFilterString = params.get('categories') ?? "";
     return paramFilterString.split(",");
   }
@@ -89,7 +90,7 @@ export function ViewFilterBar({ filters }) {
 
   const handleFilterChecked = (filterOption, isChecked) => {
     const categoryFilter:string = filterOption.value;
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams!.toString());
     if (!params.has('categories') && isChecked) {
       params.set('categories', categoryFilter);
       replace(`${pathname}?${params.toString()}`);

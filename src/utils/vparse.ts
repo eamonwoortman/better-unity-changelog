@@ -29,7 +29,7 @@ export class Version {
       this.major,
       this.minor,
       this.patch,
-      this.build
+      this.build ?? 0
     ].filter((item) => item !== undefined)
     this.text = `${this.major}.${this.minor}.${this.patch}`
     if (this.build !== undefined) {
@@ -78,7 +78,7 @@ export class Version {
   }
 
   createHash(): number {
-    return this.major * 100000000 + this.minor * 1000000 + this.patch * 10000 + (this.build + 1 || 0)
+    return this.major * 100000000 + this.minor * 1000000 + this.patch * 10000 + (this.build! + 1 || 0)
   }
 
 }

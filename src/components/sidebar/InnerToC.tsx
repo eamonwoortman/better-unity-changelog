@@ -6,7 +6,7 @@ import { Headings } from './Headings';
 
 export default function InnerToC({ headings }) {
     const flattenHeadings = (nestedHeadings : NestedHeading[]) => {
-        let headingIds = [];
+        let headingIds:string[] = [];
         nestedHeadings.forEach(heading => {
             headingIds.push(heading.id);
             if (heading.items) {

@@ -14,7 +14,7 @@ export default function useHeadingsData ( changelogs : ChangelogRoot[] ) : Neste
     const nameSlug:string = slugify(node.name);
     const heading: NestedHeading = {
       id: `${id}_${nameSlug}`,
-      title: node.name,
+      title: node.name ?? "",
       depth: depth,
       items: []
     };
@@ -33,7 +33,7 @@ export default function useHeadingsData ( changelogs : ChangelogRoot[] ) : Neste
   };
 
   const createHeadings = (changelogs : ChangelogRoot[]): NestedHeading[] => {
-    let headings = [];
+    let headings:NestedHeading[] = [];
     changelogs.forEach((root, index) => {
       const heading: NestedHeading = {
         id: `${root.slug}`,
@@ -44,7 +44,7 @@ export default function useHeadingsData ( changelogs : ChangelogRoot[] ) : Neste
       
       const mainCategory = root.categories;
       if (mainCategory) {
-        mainCategory.children.forEach((childNode, child_index) => {
+        mainCategory.children?.forEach((childNode, child_index) => {
           const childCategories = traverseCategories(heading.id, childNode, heading.depth);
           heading.items = [...heading.items, childCategories];
         });

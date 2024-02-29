@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default async function Page(props: Props) {
-  const searchTerm = props.searchParams.term;
+  const searchTerm = props.searchParams?.term ?? "";
   const results = await searchChangelog(searchTerm);
 
   return (<div className="flex flex-col items-center justify-center">
