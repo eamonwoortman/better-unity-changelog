@@ -2,8 +2,8 @@ import useHeadingsData from 'hooks/useHeadingsData';
 import { ChangelogsPageProps } from 'lib/changelog';
 import InnerToC from './InnerToC';
 
-export default function TableOfContents( { changelogs } : { changelogs: ChangelogsPageProps } ) {
-  const headings = useHeadingsData(changelogs)
+export default function TableOfContents( props: ChangelogsPageProps ) {
+  const headings = useHeadingsData(props.changelogs)
   return (<InnerToC headings={headings}/>)
 }
 

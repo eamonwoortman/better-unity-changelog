@@ -69,11 +69,11 @@ class ChangelogDatabase {
             _id: 0,
             version_string: 1,
             slug: 1,
-            released: {
+            released: 1,/*{
               $dateFromString: {
                 dateString: '$released'
               }
-            },
+            },*/
             url: 1,
             category_types: 1,
             change_types: 1,
