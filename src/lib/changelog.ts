@@ -24,11 +24,16 @@ export type LayoutPageProps = {
   params?: ChangelogProps;
   children?: React.ReactNode;
 };
+  
+// Todo: move to util class
+const transformCategoryString = (label: string): FilterCategoryOption => {
+  const value = label.toLowerCase().replace(' ', '_');
+  return { value, label, checked: false };
+}
 
 const getChangelog = async (versionString: string): Promise<ChangelogRoot | undefined> => {
   const version: Version = Version.parseVersion(versionString)
   if (version.isEmpty) {
-    console.log(`isempty: ${versionString}`)
     return undefined
   }
   return await ChangelogDatabase.findVersion<ChangelogRoot>(version.text)
@@ -40,7 +45,6 @@ const getChangelogs = async (fromQuery: string, toQuery: string): Promise<Change
 
   if (from.isEmpty || to.isEmpty) {
     console.log(`Could not parse 'from'(${fromQuery}) or 'to'(${toQuery}) queries`)
-
     return []
   }
   const result = await ChangelogDatabase.findVersions(from, to)
@@ -48,25 +52,20 @@ const getChangelogs = async (fromQuery: string, toQuery: string): Promise<Change
 }
 
 export async function getPageProps(props: ChangelogProps): Promise<ChangelogsPageProps> {
-  const { params, searchParams } = props
-  if (!params) {
-    return {changelogs: [], filters: []};
+  const { params } = props;
+  const slug = params.slug[0];
+  if (!slug) {
+    return {changelogs: []};
   }
   const changelogs:ChangelogRoot[] = []
-  if (params.slug !== undefined) {
-    const slug = params.slug[0];
-    const matchingChangelog = await getChangelog(slug)
-
-    if (matchingChangelog) {
-      changelogs.push(matchingChangelog)
-    }
-  } else if (searchParams !== undefined) {
-    const from = searchParams.from as string;
-    const to = searchParams.to as string;
-    const matchingChangelogs = await getChangelogs(from, to)
-    changelogs.push(...matchingChangelogs);
+  const matchingChangelog = await getChangelog(slug)
+  if (matchingChangelog) {
+    changelogs.push(matchingChangelog)
   }
-  const filters = [];
+  if (props.searchParams) {
+    filterChangelogs(changelogs, props.searchParams);
+  }
+  const filters = getCategoryFilters(changelogs);
   return {changelogs, filters}
 }
 
@@ -74,12 +73,12 @@ function filter(nodes: ChangelogNode[], category_filters: string[]) {
   var matches:ChangelogNode[] = [];
   if (!Array.isArray(nodes)) return matches;
   nodes.forEach(function (node) {
-    const nodeName:string = node.name!.toLowerCase();
-    if (category_filters.some(u => u.includes(nodeName))) {
+    const nodeName:string = node.name!.toLowerCase().replace(' ', '_');
+    if (category_filters.some(filter => filter.includes(nodeName))) {
       matches.push(node);
     } else if (node.children) {
       let childResults = filter(node.children, category_filters);
-      if (childResults.length)
+      if (childResults.length > 0)
         matches.push(Object.assign({}, node, { children: childResults }));
     }
   })
@@ -89,7 +88,6 @@ function filter(nodes: ChangelogNode[], category_filters: string[]) {
 function filterChangelogs(changelogs: ChangelogRoot[], searchParams: SearchFilterParams) {
   const categories = searchParams.categories as string;
   if (!categories) {
-    console.log(`No categories found in searchParams; `, searchParams)
     return;
   }
   const category_filters = categories.split(',');
@@ -119,17 +117,6 @@ const defaultCategoryFilters = [
 ]
 
 function getCategoryFilters(changelogs: ChangelogRoot[]) {
-   // Todo: move to util class
-  const transformCategoryString = (label: string): FilterCategoryOption => {
-    const value = label.toLowerCase().replace(' ', '_');
-    return { value, label, checked: false };
-  }
-  /*
-  const setCategoryFilterOptions = (options: FilterCategoryOption[]) => {
-    const categoryFilter = filters.find(x => x.id == "category");
-    categoryFilter.options = options;
-    setFilters([...filters]);
-  }*/
   const allChangelogCategories =  changelogs.map(changelog => changelog.category_types.map(category => transformCategoryString(category))).flat(1);
   const uniqueOptions = allChangelogCategories.filter((category, index, self) => self.findIndex(other => other.value === category.value) === index);
   const changelogFilters:FilterCategory[] = defaultCategoryFilters;

@@ -9,7 +9,7 @@ import {
   PlusSmIcon,
 } from "@heroicons/react/solid";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 // import { useAppDispatch, useAppSelector } from 'hooks'
 import Toggle from "ui/Toggle";
 
@@ -19,15 +19,6 @@ const sortOptions = [
   { name: "Newest", href: "#", current: false },
   { name: "Price: Low to High", href: "#", current: false },
   { name: "Price: High to Low", href: "#", current: false },
-];
-const subCategories = [
-  /*
-   * { name: 'Totes', href: '#' },
-   * { name: 'Backpacks', href: '#' },
-   * { name: 'Travel Bags', href: '#' },
-   * { name: 'Hip Bags', href: '#' },
-   * { name: 'Laptop Sleeves', href: '#' },
-   */
 ];
 
 export interface FilterCategoryOption {
@@ -64,22 +55,27 @@ function classNames(...classes) {
 }
 
 export function ViewFilterBar({ filters }) {
-  //const dispatch = useAppDispatch()
-  //const { category_filters } = useAppSelector(filtersSelector)
-  const category_filters = [];
+  const [stateFilters, setStateFilters] = useState<FilterCategory[]>([]);
+  const [simpleView, setSimpleView] = useState<boolean>();  
+  
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
   
+  const getCategoryFilters = () : string[] => {
+    const params = new URLSearchParams(searchParams);
+    const paramFilterString = params.get('categories') ?? "";
+    return paramFilterString.split(",");
+  }
+
   const checkFilterOptions = () => {
-    category_filters.map((filter) =>
-      filters.map((filterCategory) =>
+    const category_filters:string[] = getCategoryFilters();
+    filters.map((filterCategory) =>
         filterCategory.options.map(
-          (filterOption) =>
-            (filterOption.checked = filterOption.value === filter.id)
+          (filterOption) => (filterOption.checked = category_filters.includes(filterOption.value))
         )
-      )
     );
+    setStateFilters(filters);
   };
 
   useEffect(() => {
@@ -88,25 +84,27 @@ export function ViewFilterBar({ filters }) {
   }, [searchParams]);
 
   const handleViewModeChanged = (isChecked) => {
-    //dispatch(set_simple_view(isChecked))
+    setSimpleView(isChecked);
   };
 
   const handleFilterChecked = (filterOption, isChecked) => {
-    const params = new URLSearchParams(searchParams);
     const categoryFilter:string = filterOption.value;
-    const categoryFilterString = params.get('category') ?? "";
-    let categories:string[] = categoryFilterString.split(",");
-    
+    const params = new URLSearchParams(searchParams);
+    if (!params.has('categories') && isChecked) {
+      params.set('categories', categoryFilter);
+      replace(`${pathname}?${params.toString()}`);
+      return;
+    }
+    let categories:string[] = getCategoryFilters();
     if (isChecked) {
       categories.push(categoryFilter);
     } else {
-      categories = categories.filter(x => x === categoryFilter);
+      categories = categories.filter(x => x !== categoryFilter);
     }
-
     if (categories.length == 0) {
-      params.delete('category');
+      params.delete('categories');
     } else {
-      params.set('category', categories.join(','));
+      params.set('categories', categories.join(','));
     }
     replace(`${pathname}?${params.toString()}`);
   };
@@ -149,23 +147,8 @@ export function ViewFilterBar({ filters }) {
             </>
           )}
         </Disclosure>
-
-        <h3 className="sr-only">Categories</h3>
-        {subCategories.length > 0 && (
-          <ul
-            className="text-sm font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200"
-            role="list"
-          >
-            {subCategories.map((category) => (
-              <li key={category.name}>
-                <a href={category.href}>{category.name}</a>
-              </li>
-            ))}
-          </ul>
-        )}
-
         <h3 className="hidden lg:block text-cyan-600 pb-5 pt-0 m-0">Filters</h3>
-        {filters.map((section) => (
+        {stateFilters.map((section) => (
           <Disclosure
             as="div"
             defaultOpen
@@ -177,7 +160,7 @@ export function ViewFilterBar({ filters }) {
                 <h3 className="-my-3 flow-root">
                   <Disclosure.Button className="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
                     <span className="font-medium text-gray-900">
-                      {section.name} ({section.options.length})
+                      {section.name}
                     </span>
                     <span className="ml-6 flex items-center">
                       {open ? (
@@ -330,17 +313,6 @@ export function MobileViewFilter({
 
             {/* Filters */}
             <form className="mt-4 border-t border-gray-200">
-              <h3 className="sr-only">Categories</h3>
-              <ul className="font-medium text-gray-900 px-2 py-3" role="list">
-                {subCategories.map((category) => (
-                  <li key={category.name}>
-                    <a href={category.href} className="block px-2 py-3">
-                      {category.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-
               {filters.map((section) => (
                 <Disclosure
                   as="div"
@@ -405,7 +377,3 @@ export function MobileViewFilter({
     </Transition.Root>
   );
 }
-function replace(arg0: string) {
-  throw new Error("Function not implemented.");
-}
-

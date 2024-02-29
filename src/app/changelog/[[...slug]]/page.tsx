@@ -11,7 +11,7 @@ import { Suspense } from 'react';
 export const dynamic = "force-dynamic";
 
 export default async function Page(props: ChangelogProps) {
-  const changelogs = await getPageProps(props)
+  const { changelogs, filters } = await getPageProps(props)
 
   return (<>
             <div>
@@ -27,7 +27,7 @@ export default async function Page(props: ChangelogProps) {
                 </div>
                 <div className="lg:pl-[19.5rem]">
                     <div className="max-w-3xl mx-auto xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
-                      <ChangeLogDetailLayout changelogs={changelogs}>
+                      <ChangeLogDetailLayout changelogs={changelogs} filters={filters}>
                         {changelogs !== undefined && changelogs.map((changelog:ChangelogRoot, index:number) => (
                           <ChangelogContainer key={index} root={changelog} id={index} />
                           )
