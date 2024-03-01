@@ -6,6 +6,7 @@ import { Version } from 'utils/vparse';
 export type ChangelogsPageProps = {
   changelogs: ChangelogRoot[];
   filters?: FilterCategory[];
+  simpleView: boolean;
 }
 
 export type ChangelogProps = {
@@ -52,21 +53,39 @@ const getChangelogs = async (fromQuery: string, toQuery: string): Promise<Change
 }
 
 export async function getPageProps(props: ChangelogProps): Promise<ChangelogsPageProps> {
-  const { params } = props;
+  const { params, searchParams } = props;
   const slug = params.slug[0];
   if (!slug) {
-    return {changelogs: []};
+    return {changelogs: [], simpleView: false};
   }
   const changelogs:ChangelogRoot[] = []
   const matchingChangelog = await getChangelog(slug)
   if (matchingChangelog) {
     changelogs.push(matchingChangelog)
   }
-  if (props.searchParams) {
-    filterChangelogs(changelogs, props.searchParams);
+  if (searchParams) {
+    filterChangelogs(changelogs, searchParams);
   }
   const filters = getCategoryFilters(changelogs);
-  return {changelogs, filters}
+  const simpleView = Boolean(searchParams?.simple_view);
+  console.log(`simpleview prop: `, simpleView);
+  return {changelogs, filters, simpleView}
+}
+
+export async function getPagePropsMultiple(props: ChangelogsProps): Promise<ChangelogsPageProps> {
+  const { params, searchParams } = props
+  if (!params) {
+    return {changelogs: [], filters: [], simpleView: false}
+  }
+  const changelogs = await getChangelogs(params.from, params.to);
+  
+  if (searchParams) {
+    filterChangelogs(changelogs, searchParams);
+  }
+  const filters = getCategoryFilters(changelogs);
+  const simpleView = Boolean(searchParams?.simple_view);
+  console.log(`simpleview prop: `, simpleView);
+  return {changelogs, filters, simpleView};
 }
 
 function filter(nodes: ChangelogNode[], category_filters: string[]) {
@@ -123,17 +142,4 @@ function getCategoryFilters(changelogs: ChangelogRoot[]) {
   const categoryFilter = changelogFilters.find(x => x.id == "category");
   categoryFilter!.options = uniqueOptions;
   return changelogFilters;
-}
-
-export async function getPagePropsMultiple(props: ChangelogsProps): Promise<ChangelogsPageProps> {
-  const { params } = props
-  if (!params) {
-    return {changelogs: [], filters: []}
-  }
-  const changelogs = await getChangelogs(params.from, params.to);
-  if (props.searchParams) {
-    filterChangelogs(changelogs, props.searchParams);
-  }
-  const filters = getCategoryFilters(changelogs);
-  return {changelogs, filters};
 }

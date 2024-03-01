@@ -11,7 +11,7 @@ import { Suspense } from 'react';
 export const dynamic = "force-dynamic";
 
 export default async function Page(props: ChangelogProps) {
-  const { changelogs, filters } = await getPageProps(props)
+  const { changelogs, filters, simpleView } = await getPageProps(props)
 
   return (<>
             <div>
@@ -21,15 +21,15 @@ export default async function Page(props: ChangelogProps) {
                     scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-slate-100 scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
                   <nav id="nav" className="lg:text-sm lg:leading-6 relative">
                     <Suspense fallback={<p>Fast component loading...</p>}>
-                          <TableOfContents changelogs={changelogs} />
+                          <TableOfContents changelogs={changelogs} simpleView={simpleView} />
                     </Suspense>
                   </nav>
                 </div>
                 <div className="lg:pl-[19.5rem]">
                     <div className="max-w-3xl mx-auto xl:max-w-none xl:ml-0 xl:mr-[15.5rem] xl:pr-16">
-                      <ChangeLogDetailLayout changelogs={changelogs} filters={filters}>
+                      <ChangeLogDetailLayout changelogs={changelogs} filters={filters} simpleView={simpleView}>
                         {changelogs !== undefined && changelogs.map((changelog:ChangelogRoot, index:number) => (
-                          <ChangelogContainer key={index} root={changelog} id={index} />
+                          <ChangelogContainer key={index} root={changelog} id={index} simpleView={simpleView}/>
                           )
                         )}
                       </ChangeLogDetailLayout>

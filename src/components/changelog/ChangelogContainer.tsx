@@ -1,5 +1,7 @@
 import { ExternalLinkIcon } from '@heroicons/react/solid'
 import { ChangelogNode, ChangelogRoot, ExtendedEntryType } from 'components/changelog/changelog.types'
+import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import sanitizeHtml from 'sanitize-html'
 import styles from 'styles/Changelog.module.css'
 import Anchor from 'ui/Anchor'
@@ -11,6 +13,7 @@ import { slugify } from 'utils/stringutils'
 type ContainerProps = {
     id: number;
     root: ChangelogRoot;
+    simpleView: boolean;
 };
 
 const MissingBadgeColor = 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
@@ -157,9 +160,8 @@ function RenderNode({ node, depth = 0, showSubCategories, id }: RenderNodeProps)
 }
 
 
-export default function ChangelogContainer({ id, root }: ContainerProps) {
+export default function ChangelogContainer({ id, root, simpleView }: ContainerProps) {
   const filteredCategories = root.categories.children
-  const use_simple_view = false
 
   /*
    *Todo: re-implement on SSR
@@ -202,7 +204,7 @@ export default function ChangelogContainer({ id, root }: ContainerProps) {
       </div>
       {filteredCategories
         ? filteredCategories.map((node, index) => <RenderNode
-key={index} node={node} showSubCategories={!use_simple_view}
+key={index} node={node} showSubCategories={!simpleView}
             id={`${root.slug}`}
           />)
         : null}

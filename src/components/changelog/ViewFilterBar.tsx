@@ -54,10 +54,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export function ViewFilterBar({ filters }) {
+export function ViewFilterBar({ filters, simpleView }) {
   const [stateFilters, setStateFilters] = useState<FilterCategory[]>([]);
-  const [simpleView, setSimpleView] = useState<boolean>();  
-  
+
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -85,7 +84,12 @@ export function ViewFilterBar({ filters }) {
   }, [searchParams]);
 
   const handleViewModeChanged = (isChecked) => {
-    setSimpleView(isChecked);
+    const params = new URLSearchParams(searchParams!.toString());
+    if (isChecked)
+      params.set('simple_view', isChecked);
+    else
+      params.delete('simple_view');
+    replace(`${pathname}?${params.toString()}`);
   };
 
   const handleFilterChecked = (filterOption, isChecked) => {
@@ -141,6 +145,7 @@ export function ViewFilterBar({ filters }) {
                     <Toggle
                       label="Simple view"
                       onChange={handleViewModeChanged}
+                      enabled={simpleView}
                     />
                   </div>
                 </div>
@@ -209,7 +214,7 @@ export function ViewFilterBar({ filters }) {
 export function MobileViewMenu({ setMobileFiltersOpen }) {
   return (
     <div className="flex items-center">
-      <Menu as="div" className="relative inline-block text-left">
+      <Menu as="div" className="hidden relative inline-block text-left">
         <div>
           <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
             Sort
