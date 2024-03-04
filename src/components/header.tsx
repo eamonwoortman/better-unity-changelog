@@ -30,9 +30,11 @@ export const Header: FunctionComponent = () => {
             />
           </Link>
         </div>
+        {/* 
         <Suspense>
           <Searchbar />
         </Suspense>
+        */}
         {showThemeSwitch && <ThemeSwitch />}
       </div>
     </header>)
