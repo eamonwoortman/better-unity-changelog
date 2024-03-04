@@ -16,8 +16,6 @@ export function useScrollSpy(
         entries.forEach((entry) => {
           if (entry?.isIntersecting) {
             setActiveId(entry.target.id);
-          } else {
-            console.log('.');
           }
         });
       }, options);

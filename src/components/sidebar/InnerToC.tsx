@@ -22,10 +22,6 @@ export default function InnerToC({ headings }) {
         { rootMargin: "0% 0% -25% 0%" }
     );
 
-    React.useEffect(() => {
-        console.log(`InnerToc, activeId: `, activeId);
-    }, [activeId]);
-
     return (
         <nav aria-label="Table of contents">
             <h5>TABLE OF CONTENTS</h5>
