@@ -1,39 +1,43 @@
 export class Version {
   static readonly empty: Version = new Version(0, 0, 0, undefined)
 
-  static readonly versionRegex = /(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)-?(?<prerelease>[a-zA-Z-\d\.]*)\+?([a-zA-Z-\d\.]*)/
+  static readonly versionRegex = /(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)(?<prereleasetype>[abf])(?<prereleasenumber>\d+)?/;
 
   major: number
-
   minor: number
-
   patch: number
-
-  build?: number
-
+  prereleasetype?:string
+  prereleasenumber?: number
   isEmpty: boolean
-
   parsed: Array<number>
-
   text: string
-
   hash: number
 
-  constructor(major: number, minor: number, patch: number, prerelease?: number | undefined) {
+  constructor(major: number, minor: number, patch: number, prereleasetype?: string | undefined, prereleasenumber?: number | undefined) {
     this.major = major
     this.minor = minor
     this.patch = patch
-    this.build = prerelease
-    this.isEmpty = !this.major && !this.minor && !this.patch && !this.build
+    this.prereleasetype = prereleasetype;
+    this.prereleasenumber = prereleasenumber
+    this.isEmpty = !this.major && !this.minor && !this.patch && !this.prereleasenumber
+
+    var release:number | undefined = undefined;
+    if (prereleasetype && prereleasenumber) {
+      var prereleaseCode = prereleasetype.charCodeAt(0) * 13; //String.fromCharCode(97 + prereleasetype as string);
+      release = prereleaseCode * prereleasenumber
+    }
+
     this.parsed = [
       this.major,
       this.minor,
       this.patch,
-      this.build ?? 0
+      release ?? 0
     ].filter((item) => item !== undefined)
+    
     this.text = `${this.major}.${this.minor}.${this.patch}`
-    if (this.build !== undefined) {
-      this.text += `-${this.build}`
+    
+    if (prereleasetype && prereleasenumber) {
+      this.text += `${prereleasetype}${prereleasenumber}`
     }
     this.hash = this.createHash()
   }
@@ -49,17 +53,21 @@ export class Version {
       major,
       minor,
       patch,
-      prerelease
+      prereleasetype,
+      prereleasenumber
     ] = [
-      Number(groups.major),
-      Number(groups.minor),
-      Number(groups.patch),
-      groups.prerelease
-        ? Number(groups.prerelease)
-        : undefined
-    ]
+        Number(groups.major),
+        Number(groups.minor),
+        Number(groups.patch),
+        groups.prereleasetype
+          ? String(groups.prereleasetype)
+          : undefined,
+        groups.prereleasenumber
+          ? Number(groups.prereleasenumber)
+          : undefined
+      ]
 
-    return new Version(major, minor, patch, prerelease)
+    return new Version(major, minor, patch, prereleasetype, prereleasenumber)
   }
 
   compare(v: string | Version): number {
@@ -78,7 +86,7 @@ export class Version {
   }
 
   createHash(): number {
-    return this.major * 100000000 + this.minor * 1000000 + this.patch * 10000 + (this.build! + 1 || 0)
+    return this.major * 100000000 + this.minor * 1000000 + this.patch * 10000 + (this.prereleasenumber! + 1 || 0)
   }
 
 }
